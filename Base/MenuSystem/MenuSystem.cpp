@@ -8,13 +8,14 @@
 #include <vector>
 
 #include "Base/ProblemBase.h"
-#include "day-01/Day-01.h"
+#include "Base/DayEnum/DayEnum.h"
 
 namespace KT {
 } // KT
 void MenuSystem::AddProblem(std::unique_ptr<ProblemBase> NewProblem) {
-    m_Problems.insert(std::make_pair(NewProblem->GetProblemName(), std::move(NewProblem)));
+    m_Problems.insert(std::make_pair(NewProblem->GetDay(), std::move(NewProblem)));
 }
+
 
 void MenuSystem::PrintAllProblems() {
     std::cout << "Problems: \n";

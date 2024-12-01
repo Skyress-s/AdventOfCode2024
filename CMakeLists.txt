@@ -19,4 +19,6 @@ add_executable(AdventOfCode main.cpp
         Base/MenuSystem/MenuSystem.h
         Utility/TerminalUtility.cpp
         Utility/TerminalUtility.h
+        Base/DayEnum/DayEnum.h
+        Base/DayEnum/DayEnum.cpp
 )

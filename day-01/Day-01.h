@@ -5,14 +5,20 @@
 #pragma once
 #include "Base/ProblemBase.h"
 
-class Day01 : public ProblemBase {
+enum class EDay : uint8_t;
 
-    virtual void Initialize();
+class Day01 final : public ProblemBase {
+public:
+    Day01() = default;
+    ~Day01() override;
+protected:
+    void Initialize() override;
 
-    virtual void Solve();
+    void Solve(const StringType &Input) override;
 
-    virtual void CleanUp();
+    void CleanUp() override;
 
-    virtual StringType GetProblemName();
+    EDay GetDay() override;
 
+    StringType GetInputFilePathsFromRoot() override;
 };

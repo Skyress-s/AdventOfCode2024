@@ -4,15 +4,24 @@
 
 #include "Day-01.h"
 
+#include "Base/DayEnum/DayEnum.h"
+
+
+Day01::~Day01() = default;
+
 void Day01::Initialize() {
 }
 
-void Day01::Solve() {
+void Day01::Solve(const StringType &Input) {
 }
 
 void Day01::CleanUp() {
 }
 
-StringType Day01::GetProblemName() {
-    return {"Day 01"};
+EDay Day01::GetDay() {
+    return EDay::Day01;
+}
+
+StringType Day01::GetInputFilePathsFromRoot() {
+    return {"day-01/input.txt"};
 }

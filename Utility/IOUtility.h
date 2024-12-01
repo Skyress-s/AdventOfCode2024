@@ -3,7 +3,10 @@
 //
 
 #pragma once
+#include <vector>
 
-class IOUtility {
+#include "Base/BaseTypeDefs.h"
 
+namespace KT::IOUtility {
+    std::vector<StringType> ReadFile(const StringType& Path);
 };

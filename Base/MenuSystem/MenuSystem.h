@@ -5,18 +5,14 @@
 #pragma once
 #include <memory>
 #include <unordered_map>
-#include <unordered_set>
-
-#include "Base/BaseTypeDefs.h"
-
 
 class ProblemBase;
+enum class EDay: uint8_t;
 
 /// todo explain
 /// assumes that there can only be one of each problem.
 ///
 class MenuSystem {
-
 
 public:
     void AddProblem(std::unique_ptr<ProblemBase> NewProblem);
@@ -24,5 +20,5 @@ public:
     void PrintAllProblems();
 
 private:
-    std::unordered_map<StringType, std::unique_ptr<ProblemBase>> m_Problems;
+    std::unordered_map<EDay, std::unique_ptr<ProblemBase>> m_Problems;
 };
