@@ -21,4 +21,6 @@ add_executable(AdventOfCode main.cpp
         Utility/TerminalUtility.h
         Base/DayEnum/DayEnum.h
         Base/DayEnum/DayEnum.cpp
+        Utility/Clock/Stopwatch.cpp
+        Utility/Clock/Stopwatch.h
 )
