@@ -6,3 +6,5 @@
 #include <string>
 
 using StringType = std::string;
+
+constexpr int32_t INVALID_RESULT = -1;

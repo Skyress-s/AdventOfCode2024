@@ -3,10 +3,15 @@
 //
 
 #pragma once
+#include <cstdint>
 #include <vector>
 
 #include "Base/BaseTypeDefs.h"
 
+enum class EDay : uint8_t;
+
 namespace KT::IOUtility {
     std::vector<StringType> ReadFile(const StringType& Path);
+
+    StringType GetInputFilePathFromDay(const EDay Day);
 };

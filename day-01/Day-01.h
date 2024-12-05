@@ -14,7 +14,8 @@ public:
 protected:
     void Initialize() override;
 
-    void Solve(const StringType &Input) override;
+    int32_t SolvePart1(const std::vector<StringType>& Input) override;
+    int32_t SolvePart2(const std::vector<StringType>& Input) override;
 
     void CleanUp() override;
 

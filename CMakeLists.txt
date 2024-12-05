@@ -7,6 +7,10 @@ set(INCLUDE_DIRECTORIES ./)
 
 include_directories(${INCLUDE_DIRECTORIES})
 
+configure_file(day-01/TestInput.txt day-01/TestInput.txt COPYONLY) # replace https://cliutils.gitlab.io/modern-cmake/chapters/basics/structure.html
+configure_file(day-01/Input.txt day-01/Input.txt COPYONLY)
+
+
 add_executable(AdventOfCode main.cpp
         Base/ProblemBase.cpp
         Base/ProblemBase.h

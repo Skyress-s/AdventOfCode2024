@@ -35,6 +35,8 @@ enum class EDay : uint8_t {
     Count // MUST be last
 };
 
+StringType GetDayNumberString(const EDay Day);
+
 StringType GetDayName(const EDay Day);
 
 std::ostream& operator<<(std::ostream& os, const EDay day);

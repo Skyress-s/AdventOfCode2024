@@ -1,4 +1,5 @@
 ﻿#include <fstream>
+#include <iomanip>
 #include <iostream>
 
 #include "Base/MenuSystem/MenuSystem.h"
@@ -7,11 +8,9 @@
 
 int main()
 {
-    // MenuSystem Men;
-    // Menu.AddProblem(std::make_unique_for_overwrite<Day01>());
-    // Menu.PrintAllProblems();
-
-    KT::IOUtility::ReadFile("../Test.txt");
-
+    MenuSystem Menu;
+    Menu.AddProblem(std::make_unique_for_overwrite<Day01>());
+    Menu.SolveProblem(EDay::Day01);
+    std::cout << "Size of address: " << sizeof(void*) << std::endl;
     return 0;
 }

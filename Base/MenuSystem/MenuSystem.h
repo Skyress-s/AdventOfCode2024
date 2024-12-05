@@ -6,6 +6,8 @@
 #include <memory>
 #include <unordered_map>
 
+#include "Base/DayEnum/DayEnum.h"
+
 class ProblemBase;
 enum class EDay: uint8_t;
 
@@ -18,6 +20,8 @@ public:
     void AddProblem(std::unique_ptr<ProblemBase> NewProblem);
 
     void PrintAllProblems();
+
+    void SolveProblem(const EDay Day) const;
 
 private:
     std::unordered_map<EDay, std::unique_ptr<ProblemBase>> m_Problems;

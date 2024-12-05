@@ -4,8 +4,15 @@
 
 #include "DayEnum.h"
 
+#include <iomanip>
 #include <ostream>
 
+
+StringType GetDayNumberString(const EDay Day) {
+    std::stringstream ss;
+    ss << std::setw(2) << std::setfill('0') << static_cast<int32_t>(Day);
+    return ss.str();
+}
 
 StringType GetDayName(const EDay Day) {
     const StringType DayPrefix = "Day_";
