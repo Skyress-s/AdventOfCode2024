@@ -27,13 +27,32 @@ void MenuSystem::PrintAllProblems() {
 
 }
 
-void MenuSystem::SolveProblem(const EDay Day) const {
+void MenuSystem::SolveProblem1(const EDay Day, const bool bTest) const {
     assert(m_Problems.contains(Day));
 
-    const StringType Path = KT::IOUtility::GetInputFilePathFromDay(m_Problems.find(Day)->second->GetDay());
+    StringType Path;
+    if (bTest) {
+        Path = KT::IOUtility::GetTestInputFilePathFromDay(m_Problems.find(Day)->second->GetDay());
+    }
+    else {
+        Path = KT::IOUtility::GetInputFilePathFromDay(m_Problems.find(Day)->second->GetDay());
+    }
     const std::vector<StringType> Lines = KT::IOUtility::ReadFile(Path);
     const int32_t AnswerPart1 = m_Problems.find(Day)->second->SolvePart1(Lines);
     std::cout << "Answer To Part1: " << AnswerPart1 << std::endl;
+}
+
+void MenuSystem::SolveProblem2(const EDay Day, const bool bTest) const {
+    assert(m_Problems.contains(Day));
+
+    StringType Path;
+    if (bTest) {
+        Path = KT::IOUtility::GetTestInputFilePathFromDay(m_Problems.find(Day)->second->GetDay());
+    }
+    else {
+        Path = KT::IOUtility::GetInputFilePathFromDay(m_Problems.find(Day)->second->GetDay());
+    }
+    const std::vector<StringType> Lines = KT::IOUtility::ReadFile(Path);
     const int32_t AnswerPart2 = m_Problems.find(Day)->second->SolvePart2(Lines);
     std::cout << "Answer To Part2: " << AnswerPart2 << std::endl;
 }

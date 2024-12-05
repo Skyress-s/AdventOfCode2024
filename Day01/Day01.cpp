@@ -2,7 +2,7 @@
 // Created by mathm on 01/12/2024.
 //
 
-#include "Day-01.h"
+#include "Day01.h"
 
 #include <algorithm>
 #include <assert.h>
@@ -48,7 +48,7 @@ int32_t Day01::SolvePart1(const std::vector<StringType>& Input) {
         const int32_t Left = LeftNumbers[i];
         const int32_t Right = RightNumbers[i];
         TotalDiff += std::abs(Left - Right);
-        std::cout << "Left: " << Left << " Right: " << Right << std::endl;
+        // std::cout << "Left: " << Left << " Right: " << Right << std::endl;
     }
     return TotalDiff;
 }
@@ -93,6 +93,3 @@ EDay Day01::GetDay() {
     return EDay::Day01;
 }
 
-StringType Day01::GetInputFilePathsFromRoot() {
-    return {"day-01/input.txt"};
-}

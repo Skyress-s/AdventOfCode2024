@@ -29,6 +29,12 @@ std::vector<StringType> KT::IOUtility::ReadFile(const StringType& Path) {
 
 StringType KT::IOUtility::GetInputFilePathFromDay(const EDay Day) {
     const StringType DayString = GetDayNumberString(Day);
-    const StringType Path = "day-" + DayString + "/Input.txt";
+    const StringType Path = "Day" + DayString + "/Input.txt";
+    return Path;
+}
+
+StringType KT::IOUtility::GetTestInputFilePathFromDay(const EDay Day) {
+    const StringType DayString = GetDayNumberString(Day);
+    const StringType Path = "Day" + DayString + "/TestInput.txt";
     return Path;
 }

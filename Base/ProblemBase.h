@@ -25,6 +25,4 @@ public:
 protected:
     virtual void Initialize() = 0;
     virtual void CleanUp() = 0;
-    // Should be relative to the root (e.g. "day-01/input.txt")
-    virtual StringType GetInputFilePathsFromRoot() = 0;
 };

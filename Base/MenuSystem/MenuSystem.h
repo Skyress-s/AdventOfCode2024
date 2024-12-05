@@ -21,7 +21,8 @@ public:
 
     void PrintAllProblems();
 
-    void SolveProblem(const EDay Day) const;
+    void SolveProblem1(const EDay Day, bool bTest) const;
+    void SolveProblem2(const EDay Day, bool bTest) const;
 
 private:
     std::unordered_map<EDay, std::unique_ptr<ProblemBase>> m_Problems;

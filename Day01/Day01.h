@@ -20,6 +20,4 @@ protected:
     void CleanUp() override;
 
     EDay GetDay() override;
-
-    StringType GetInputFilePathsFromRoot() override;
 };

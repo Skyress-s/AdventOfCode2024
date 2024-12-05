@@ -14,4 +14,5 @@ namespace KT::IOUtility {
     std::vector<StringType> ReadFile(const StringType& Path);
 
     StringType GetInputFilePathFromDay(const EDay Day);
+    StringType GetTestInputFilePathFromDay(const EDay Day);
 };
