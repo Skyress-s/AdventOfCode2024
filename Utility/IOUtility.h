@@ -11,8 +11,9 @@
 enum class EDay : uint8_t;
 
 namespace KT::IOUtility {
-    std::vector<StringType> ReadFile(const StringType& Path);
+std::vector<StringType> ReadFile(const StringType& Path);
 
-    StringType GetInputFilePathFromDay(const EDay Day);
-    StringType GetTestInputFilePathFromDay(const EDay Day);
+StringType GetInputFilePathFromDay(const EDay Day);
+
+StringType GetTestInputFilePathFromDay(const EDay Day);
 };

@@ -80,10 +80,4 @@ int32_t Day02::SolvePart2(const std::vector<StringType>& Input) {
     return static_cast<int32_t>(TotalSafeReports);
 }
 
-void Day02::Initialize() {
-}
-
-void Day02::CleanUp() {
-}
-
 } // KT::Days

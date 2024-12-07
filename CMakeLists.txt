@@ -7,18 +7,17 @@ set(INCLUDE_DIRECTORIES ./)
 
 include_directories(${INCLUDE_DIRECTORIES})
 
-configure_file(Day01/TestInput.txt Day01/TestInput.txt COPYONLY) # replace https://cliutils.gitlab.io/modern-cmake/chapters/basics/structure.html
-configure_file(Day01/Input.txt Day01/Input.txt COPYONLY)
-
-configure_file(Day02/TestInput.txt Day02/TestInput.txt COPYONLY) # replace https://cliutils.gitlab.io/modern-cmake/chapters/basics/structure.html
-configure_file(Day02/Input.txt Day02/Input.txt COPYONLY)
-
+#configure_file(Resources/Day01-Day02-TestInput.txt Resources/Day01-Day02-TestInput.txt COPYONLY) # replace https://cliutils.gitlab.io/modern-cmake/chapters/basics/structure.html
+#configure_file(Resources/Day01-Day02-Input.txt Resources/Day01-Day02-Input.txt COPYONLY)
+#
+#configure_file(Day02/Day02-TestInput.txt Day02/Day02-TestInput.txt COPYONLY) # replace https://cliutils.gitlab.io/modern-cmake/chapters/basics/structure.html
+#configure_file(Day02/Day02-Input.txt Day02/Day02-Input.txt COPYONLY)
 
 add_executable(AdventOfCode main.cpp
-        Base/ProblemBase.cpp
-        Base/ProblemBase.h
-        day01/Day01.cpp
-        day01/Day01.h
+        Base/IDayProblemBase.cpp
+        Base/IDayProblemBase.h
+        Days/Day01/Day01.cpp
+        Days/Day01/Day01.h
         Base/BaseTypeDefs.h
         Utility/IOUtility.cpp
         Utility/IOUtility.h
@@ -31,10 +30,22 @@ add_executable(AdventOfCode main.cpp
         Utility/Clock/Stopwatch.cpp
         Utility/Clock/Stopwatch.h
         Base/DaySolver/IDaySolver.h
-        Day02/Day02.cpp
-        Day02/Day02.h
+        Days/Day02/Day02.cpp
+        Days/Day02/Day02.h
         Base/ConsoleUtility/ListChoice.cpp
         Base/ConsoleUtility/ListChoice.h
         Utility/ParseUtility/ParseUtility.tpp
         Utility/ParseUtility/ParseUtility.h
+        Days/Day03/Day03.cpp
+        Days/Day03/Day03.h
 )
+
+# Copies the resources into the binary directory
+add_custom_target(copy_resources ALL
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${PROJECT_SOURCE_DIR}/Resources
+        ${PROJECT_BINARY_DIR}/Resources
+        COMMENT "Copying resources into binary directory")
+
+
+add_dependencies(AdventOfCode copy_resources)

@@ -35,6 +35,7 @@ enum class EDay : uint8_t {
     Count // MUST be last
 };
 
+// Return value like "01", "02", etc.
 StringType GetDayNumberString(const EDay Day);
 
 StringType GetDayName(const EDay Day);

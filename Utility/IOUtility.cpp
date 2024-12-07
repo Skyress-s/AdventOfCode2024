@@ -10,31 +10,30 @@
 #include "Base/DayEnum/DayEnum.h"
 
 std::vector<StringType> KT::IOUtility::ReadFile(const StringType& Path) {
-    std::ifstream Infile(Path);
-    if (Infile.is_open()) {
-        std::cout << "Found File!" << std::endl;
-    }
-    else {
-        std::cout << "Could not find file at: " << Path << std::endl;
-        return {};
-    }
+        std::ifstream Infile(Path);
+        if (Infile.is_open()) {
+                std::cout << "Found File!" << std::endl;
+        } else {
+                std::cout << "Could not find file at: " << Path << std::endl;
+                return {};
+        }
 
-    StringType Line;
-    std::vector<StringType> Lines;
-    while (std::getline(Infile, Line)) {
-        Lines.push_back(Line);
-    }
-    return Lines;
+        StringType Line;
+        std::vector<StringType> Lines;
+        while (std::getline(Infile, Line)) {
+                Lines.push_back(Line);
+        }
+        return Lines;
 }
 
 StringType KT::IOUtility::GetInputFilePathFromDay(const EDay Day) {
-    const StringType DayString = GetDayNumberString(Day);
-    const StringType Path = "Day" + DayString + "/Input.txt";
-    return Path;
+        const StringType DayString = GetDayNumberString(Day);
+        const StringType Path = "Resources/Day" + DayString + "-Input.txt";
+        return Path;
 }
 
 StringType KT::IOUtility::GetTestInputFilePathFromDay(const EDay Day) {
-    const StringType DayString = GetDayNumberString(Day);
-    const StringType Path = "Day" + DayString + "/TestInput.txt";
-    return Path;
+        const StringType DayString = GetDayNumberString(Day);
+        const StringType Path = "Resources/Day" + DayString + "-TestInput.txt";
+        return Path;
 }

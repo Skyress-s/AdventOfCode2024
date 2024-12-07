@@ -12,17 +12,13 @@
 enum class EDay: uint8_t;
 
 
-class ProblemBase {
+class IDayProblemBase {
 public:
     virtual EDay GetDay() = 0;
-    ProblemBase() = default;
-    virtual ~ProblemBase() = default;
+    IDayProblemBase() = default;
+    virtual ~IDayProblemBase() = default;
 
 public:
     virtual int32_t SolvePart1(const std::vector<StringType>& Input) = 0;
     virtual int32_t SolvePart2(const std::vector<StringType>& Input) = 0;
-
-protected:
-    virtual void Initialize() = 0;
-    virtual void CleanUp() = 0;
 };
