@@ -28,7 +28,8 @@ int main()
     Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day03>());
     Menu.ChooseProblem();
 
-    std::cin >> std::ws; // Give Used time to read the output and then exit.
+    getch();
+    // std::cin >> std::ws; // Give Used time to read the output and then exit.
 
     return 0;
 }
