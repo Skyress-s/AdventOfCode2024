@@ -35,9 +35,11 @@ add_executable(AdventOfCode main.cpp
         Base/ConsoleUtility/ListChoice.cpp
         Base/ConsoleUtility/ListChoice.h
         Utility/ParseUtility/ParseUtility.tpp
+        Utility/ParseUtility/ParseUtility.cpp
         Utility/ParseUtility/ParseUtility.h
         Days/Day03/Day03.cpp
         Days/Day03/Day03.h
+        Utility/ParseUtility/ParseUtility.cpp
 )
 
 # Copies the resources into the binary directory

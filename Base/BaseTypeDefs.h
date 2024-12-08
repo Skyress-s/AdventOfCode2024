@@ -7,4 +7,4 @@
 
 using StringType = std::string;
 
-constexpr int32_t INVALID_RESULT = -1;
+inline constexpr int32_t INVALID_RESULT = -1;

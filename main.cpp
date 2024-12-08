@@ -1,9 +1,12 @@
-﻿#include "Base/ConsoleUtility/ListChoice.h"
+﻿#include <variant>
+
+#include "Base/ConsoleUtility/ListChoice.h"
 #include "Base/MenuSystem/MenuSystem.h"
 #include "Days/Day01/Day01.h"
 #include "Days/Day02/Day02.h"
 #include "Days/Day03/Day03.h"
-
+#include "Utility/IOUtility.h"
+#include "Utility/ParseUtility/ParseUtility.h"
 
 
 int main()
@@ -21,12 +24,16 @@ int main()
     };
 
     const int32_t Choice =  KT::UI::ListChoice({1,2,3}, "Question Setup", Func);
+    KT::TerminalUtility::ClearTerminal();
 
-    MenuSystem Menu(false, Choice == 1 || Choice == 3, Choice == 2 || Choice == 3);
+    // return 0;
+    MenuSystem Menu(true, Choice == 1 || Choice == 3, Choice == 2 || Choice == 3);
     Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day01>());
     Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day02>());
     Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day03>());
-    Menu.ChooseProblem();
+    try {
+        Menu.ChooseProblem();
+    } catch (const std::exception& e) {}
 
     getch();
     // std::cin >> std::ws; // Give Used time to read the output and then exit.

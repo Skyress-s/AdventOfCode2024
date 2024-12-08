@@ -37,3 +37,5 @@ StringType KT::IOUtility::GetTestInputFilePathFromDay(const EDay Day) {
         const StringType Path = "Resources/Day" + DayString + "-TestInput.txt";
         return Path;
 }
+
+

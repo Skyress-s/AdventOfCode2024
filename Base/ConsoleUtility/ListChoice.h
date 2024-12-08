@@ -36,7 +36,7 @@ void PrintList(const std::vector<TEntry>& Entries, const int32_t CurrentSelected
 }
 
 template<typename TEntry>
-const TEntry& ListChoice(const std::vector<TEntry>& Entries, const StringType& Title, std::function<StringType(const TEntry&)>& EntryToStringFunc) {
+[[nodiscard]] const TEntry& ListChoice(const std::vector<TEntry>& Entries, const StringType& Title, std::function<StringType(const TEntry&)>& EntryToStringFunc) {
         assert(!Entries.empty());
 
         TerminalUtility::ClearTerminalColor();

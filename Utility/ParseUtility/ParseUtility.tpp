@@ -4,6 +4,8 @@
 #include <sstream>
 #include <vector>
 
+#include "Utility/TerminalUtility.h"
+
 namespace ParseUtility {
 
 template<typename T>
@@ -14,5 +16,6 @@ void ParseUtility::ParseTest(const StringType& String, std::vector<T>& Output) {
         Output.push_back(Value);
     }
 }
+
 
 }
