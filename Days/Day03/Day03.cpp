@@ -5,6 +5,7 @@
 #include "Day03.h"
 
 #include <iostream>
+#include <regex>
 #include <variant>
 
 #include "Base/DayEnum/DayEnum.h"
@@ -116,6 +117,7 @@ int32_t Day03::SolvePart2(const std::vector<StringType>& Input) {
       std::vector<Instruction> Instructions{};
 
       // Find all instructions and the indices.
+      /*
       for (const StringType& Line: Input) { // Do instructions
             int32_t DoInstructionIndex = Line.find(k_DoInstruction);
             while (DoInstructionIndex != std::variant_npos) {
@@ -131,10 +133,40 @@ int32_t Day03::SolvePart2(const std::vector<StringType>& Input) {
                   DontInstructionIndex = Line.find(k_DontInstruction, DontInstructionIndex + 1); // Find next
             }
       }
+      */
 
       for (const StringType& Line: Input) {
-            int32_t DontInstructionIndex = Line.find(k_DontInstruction);
+            // int32_t InstructionIndex = Line.find(k_MulInstruction);
+            // while (InstructionIndex != std::variant_npos) {
+                  // std::regex MulInstructionRegex{R"((mul\()(\d{0,3})\,(\d{0,3})\))"};
+                  std::regex MulInstructionRegex{R"(do\(\)|don't\(\)|(mul\()(\d{0,3})\,(\d{0,3})\))"};
+                  std::smatch matches;
+                  auto begin = std::sregex_iterator(Line.begin(), Line.end(), MulInstructionRegex);
+                  auto end = std::sregex_iterator();
 
+                  for (std::sregex_iterator itr = begin; itr != end; ++itr) {
+
+                        std::cout << " hrhrhr" << itr->str(0) << std::endl;
+
+                        std::smatch match = *itr;
+                        const StringType& InstructionType = match.str(1);
+                        if (InstructionType == k_MulInstruction) {
+                              int32_t test = itr->position(0);
+                              Instructions.push_back(Instruction{EInstruction::Mul, static_cast<uint32_t>(test), MulInstruction{std::stoi(itr->str(2)), std::stoi(itr->str(3))}});
+                        }
+                        else if (InstructionType == k_DoInstruction) {
+                              Instructions.push_back(Instruction{EInstruction::Do, static_cast<uint32_t>(itr->position(0)), std::monostate{}});
+                        }
+                        else {
+                              Instructions.push_back(Instruction{EInstruction::Dont, static_cast<uint32_t>(itr->position(0)), std::monostate{}});
+                        }
+                        // std::cout << "1 " << match.str(0) << std::endl;
+                        // std::cout << "2 " << match.str(1) << std::endl;
+                        // std::cout << "3 " << match.str(2) << std::endl;
+                        // std::cout << "4 " << match.str(3) << std::endl;
+                  }
+
+            // }
       }
 
 
