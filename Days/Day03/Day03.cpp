@@ -139,44 +139,62 @@ int32_t Day03::SolvePart2(const std::vector<StringType>& Input) {
             // int32_t InstructionIndex = Line.find(k_MulInstruction);
             // while (InstructionIndex != std::variant_npos) {
                   // std::regex MulInstructionRegex{R"((mul\()(\d{0,3})\,(\d{0,3})\))"};
-                  std::regex MulInstructionRegex{R"(do\(\)|don't\(\)|(mul\()(\d{0,3})\,(\d{0,3})\))"};
+                  std::regex MulInstructionRegex{R"(do\(\)|don't\(\)|(mul\()(\d{1,3})\,(\d{1,3})\))"};
                   std::smatch matches;
                   auto begin = std::sregex_iterator(Line.begin(), Line.end(), MulInstructionRegex);
                   auto end = std::sregex_iterator();
 
                   for (std::sregex_iterator itr = begin; itr != end; ++itr) {
 
-                        std::cout << " hrhrhr" << itr->str(0) << std::endl;
+                        // std::cout << " hrhrhr" << itr->str(0) << std::endl;
 
                         std::smatch match = *itr;
-                        const StringType& InstructionType = match.str(1);
-                        if (InstructionType == k_MulInstruction) {
-                              int32_t test = itr->position(0);
-                              Instructions.push_back(Instruction{EInstruction::Mul, static_cast<uint32_t>(test), MulInstruction{std::stoi(itr->str(2)), std::stoi(itr->str(3))}});
+                        std::cout << "0 " << match.str(0) << std::endl;
+                        std::cout << "1 " << match.str(1) << std::endl;
+                        std::cout << "2 " << match.str(2) << std::endl;
+                        std::cout << "3 " << match.str(3) << std::endl;
+                        const StringType& InstructionType = match.str(0);
+                        if (InstructionType.contains(k_MulInstruction)) {
+                              Instructions.push_back(Instruction{EInstruction::Mul, static_cast<uint32_t>(itr->position(0)), MulInstruction{std::stoi(itr->str(2)), std::stoi(itr->str(3))}});
                         }
                         else if (InstructionType == k_DoInstruction) {
                               Instructions.push_back(Instruction{EInstruction::Do, static_cast<uint32_t>(itr->position(0)), std::monostate{}});
                         }
-                        else {
+                        else if (InstructionType == k_DontInstruction) {
                               Instructions.push_back(Instruction{EInstruction::Dont, static_cast<uint32_t>(itr->position(0)), std::monostate{}});
                         }
-                        // std::cout << "1 " << match.str(0) << std::endl;
-                        // std::cout << "2 " << match.str(1) << std::endl;
-                        // std::cout << "3 " << match.str(2) << std::endl;
-                        // std::cout << "4 " << match.str(3) << std::endl;
+                        else
+                        {
+                              // throw std::logic_error("Unhandeled Case");
+                        }
                   }
 
             // }
       }
 
 
+      uint32_t Sum {0};
+      bool bDo {true};
       for (const Instruction& Instruction: Instructions) {
-      std::cout << Instruction << std::endl;
+            if (bDo && Instruction.m_InstructionType == EInstruction::Mul)
+            {
+                  const MulInstruction& ValidMulInstruction = std::get<MulInstruction>(Instruction.m_InstructionData);
+                  Sum += ValidMulInstruction.FirstNumber * ValidMulInstruction.SecondNumber;
+            }
+            else if (Instruction.m_InstructionType == EInstruction::Do)
+            {
+                  bDo = true;
+            }
+            else if (Instruction.m_InstructionType == EInstruction::Dont)
+            {
+                  bDo = false;
+            }
+            std::cout << Instruction << std::endl;
       }
 
       //
       // Perform logic.
 
-      return INVALID_RESULT;
+      return Sum;
 }
 } // KT

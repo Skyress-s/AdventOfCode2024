@@ -27,13 +27,16 @@ int main()
     KT::TerminalUtility::ClearTerminal();
 
     // return 0;
-    MenuSystem Menu(true, Choice == 1 || Choice == 3, Choice == 2 || Choice == 3);
+    MenuSystem Menu(false, Choice == 1 || Choice == 3, Choice == 2 || Choice == 3);
     Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day01>());
     Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day02>());
     Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day03>());
     try {
         Menu.ChooseProblem();
-    } catch (const std::exception& e) {}
+    } catch (const std::exception& e)
+    {
+        std::cout << e.what() << std::endl;
+    }
 
     getch();
     // std::cin >> std::ws; // Give Used time to read the output and then exit.
