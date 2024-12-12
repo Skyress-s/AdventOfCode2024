@@ -45,7 +45,8 @@ bool TryFindSafeReport(const std::vector<int32_t>& Report) {
 
 
 namespace KT::Days {
-EDay Day02::GetDay() {
+EDay Day02::GetDay() const
+{
     return EDay::Day02;
 }
 

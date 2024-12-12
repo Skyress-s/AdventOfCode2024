@@ -5,6 +5,7 @@
 #include "Days/Day01/Day01.h"
 #include "Days/Day02/Day02.h"
 #include "Days/Day03/Day03.h"
+#include "Days/Day04/Day04.h"
 #include "Utility/IOUtility.h"
 #include "Utility/ParseUtility/ParseUtility.h"
 
@@ -25,12 +26,13 @@ int main()
 
     const int32_t Choice =  KT::UI::ListChoice({1,2,3}, "Question Setup", Func);
     KT::TerminalUtility::ClearTerminal();
-
     // return 0;
     MenuSystem Menu(false, Choice == 1 || Choice == 3, Choice == 2 || Choice == 3);
     Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day01>());
     Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day02>());
     Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day03>());
+    Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day04>());
+
     try {
         Menu.ChooseProblem();
     } catch (const std::exception& e)

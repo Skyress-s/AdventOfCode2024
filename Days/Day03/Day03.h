@@ -7,12 +7,12 @@
 
 namespace KT::Days {
 
-class Day03 : public IDayProblemBase {
+class Day03 final : public IDayProblemBase {
 
 public: // Override
         ~Day03() = default;
 
-        EDay GetDay() override;
+        [[nodiscard]] EDay GetDay() const override;
 
         int32_t SolvePart1(const std::vector<StringType>& Input) override;
 

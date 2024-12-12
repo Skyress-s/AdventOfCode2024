@@ -83,7 +83,8 @@ int32_t Day01::SolvePart2(const std::vector<StringType>& Input) {
         return SimilarityScore;
 }
 
-EDay Day01::GetDay() {
+EDay Day01::GetDay() const
+{
         return EDay::Day01;
 }
 

@@ -12,7 +12,8 @@
 #include "Utility/ParseUtility/ParseUtility.h"
 
 namespace KT::Days {
-EDay Day03::GetDay() {
+EDay Day03::GetDay() const
+{
       return EDay::Day03;
 }
 

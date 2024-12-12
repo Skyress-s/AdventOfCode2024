@@ -19,6 +19,6 @@ protected:
 
         int32_t SolvePart2(const std::vector<StringType>& Input) override;
 
-        EDay GetDay() override;
+        [[nodiscard]] EDay GetDay() const override;
 };
 }

@@ -40,6 +40,8 @@ add_executable(AdventOfCode main.cpp
         Days/Day03/Day03.cpp
         Days/Day03/Day03.h
         Utility/ParseUtility/ParseUtility.cpp
+        Days/Day04/Day04.cpp
+        Days/Day04/Day04.h
 )
 
 # Copies the resources into the binary directory

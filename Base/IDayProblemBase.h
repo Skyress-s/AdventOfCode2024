@@ -14,7 +14,7 @@ enum class EDay: uint8_t;
 
 class IDayProblemBase {
 public:
-    virtual EDay GetDay() = 0;
+    [[nodiscard]] virtual EDay GetDay() const = 0;
     IDayProblemBase() = default;
     virtual ~IDayProblemBase() = default;
 
