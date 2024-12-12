@@ -54,7 +54,7 @@ int32_t Day02::SolvePart1(const std::vector<StringType>& Input) {
     uint32_t TotalSafeReports = 0;
     for (const StringType& Line: Input) {
         std::vector<int32_t> Report;
-        ParseUtility::ParseTest(Line, Report);
+        ParseUtility::ParseTest(Line, Report, " ");
 
         // std::cout << "Line: " << Line << " IsSafe: " << bIsSafe << std::endl;
 
@@ -67,7 +67,7 @@ int32_t Day02::SolvePart2(const std::vector<StringType>& Input) {
     uint32_t TotalSafeReports = 0;
     for (const StringType& Line: Input) {
         std::vector<int32_t> Report;
-        ParseUtility::ParseTest(Line, Report);
+        ParseUtility::ParseTest(Line, Report, " ");
 
         if (IsReportSafe(Report)) {
             TotalSafeReports++;

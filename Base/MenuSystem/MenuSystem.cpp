@@ -4,13 +4,14 @@
 
 #include "MenuSystem.h"
 
-#include <assert.h>
+#include <cassert>
 #include <iostream>
 #include <ranges>
 #include <vector>
 
 #include "Base/IDayProblemBase.h"
 #include "Base/ConsoleUtility/ListChoice.h"
+#include "Base/TemplateTest.h"
 #include "Base/DayEnum/DayEnum.h"
 #include "Utility/IOUtility.h"
 #include "Utility/TerminalUtility.h"
@@ -41,8 +42,13 @@ void MenuSystem::ChooseProblem() {
     std::function<StringType(const EDay&)> EntryToString = [](const EDay& day) {
         return "Day" + GetDayNumberString(day);
     };
+    auto Days = BuildDays();
+    std::vector<KT::UI::TListItem<EDay>> ListItems{};
+    for (const auto& Day: Days) {
+        ListItems.emplace_back(Day, GetDayName(Day));
+    }
 
-    const EDay ChosenDay = KT::UI::ListChoice(BuildDays(), "Choose a problem to solve: ", EntryToString);
+    const EDay ChosenDay = KT::UI::ListChoice2<EDay>(ListItems, "Choose a problem to solve: ");
     if (m_bSolvePart1)
         SolveProblem1(ChosenDay, m_bUseTests);
     if (m_bSolvePart2)
@@ -62,6 +68,8 @@ void MenuSystem::SolveProblem1(const EDay Day, const bool bTest) const {
     const std::vector<StringType> Lines = KT::IOUtility::ReadFile(Path);
     const int32_t AnswerPart1 = m_Problems.find(Day)->second->SolvePart1(Lines);
     std::cout << "Answer To Part1: " << AnswerPart1 << std::endl;
+
+    std::cout << Multiply<int>(5, 5) << std::endl;
 }
 
 void MenuSystem::SolveProblem2(const EDay Day, const bool bTest) const {

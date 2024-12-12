@@ -119,39 +119,21 @@ namespace KT::Days
             return NumInstancesWord;
       }
 
-      inline uint8_t SearchLocationForWordX(const GridType &Grid, const StringType &Word, const Width_t Row,
-                                            const Width_t Col)
+      inline bool SearchWordLineOnGrid(const GridType &Grid, const StringType &Word, const Width_t Row, const Width_t Col, const int8_t ColDirection, const int8_t RowDirection)
       {
-            if (Word.empty())
-                  return false;
+          assert(ColDirection != 0 || RowDirection != 0);
+          if (Word.empty())
+                return false;
 
-            // special case for first character
-            // std::cout << "Char: " << GetCharAtRowAndCollumn(Grid, Row, Col) << ". At location: " << Row << ", " << Col << std::endl;
-            if (!IsLocationInGrid(Grid, Row, Col) || Word[0] != GetCharAtRowAndCollumn(Grid, Row, Col))
-            {
-                  return false;
-            }
 
-            uint16_t NumMatches[4] = {0, 0, 0, 0};
-            // Going clockwise from 12 o'clock.
-            for (int i = 1; i < Word.size(); ++i)
-            {
-                  // NumMatches[0] += HasLocationChar(Grid, Row + i,      Col,     Word[i]);
-                  NumMatches[0] += HasLocationChar(Grid, Row + i, Col + i, Word[i]);
-                  // NumMatches[2] += HasLocationChar(Grid, Row,          Col + i, Word[i]);
-                  NumMatches[1] += HasLocationChar(Grid, Row - i, Col + i, Word[i]);
-                  // NumMatches[4] += HasLocationChar(Grid, Row - i,      Col,     Word[i]);
-                  NumMatches[2] += HasLocationChar(Grid, Row - i, Col - i, Word[i]);
-                  // NumMatches[6] += HasLocationChar(Grid, Row,          Col - i, Word[i]);
-                  NumMatches[3] += HasLocationChar(Grid, Row + i, Col - i, Word[i]);
-            }
-
-            uint32_t NumInstancesWord{0};
-            for (const int num_match: NumMatches)
-            {
-                  NumInstancesWord += num_match == Word.size() - 1;
-            }
-            return NumInstancesWord;
+          for (int i = 0; i < Word.size(); ++i)
+          {
+                if (!HasLocationChar(Grid, Row + i * RowDirection, Col + i * ColDirection, Word[i]))
+                {
+                      return false;
+                }
+          }
+            return true;
       }
 
       uint64_t FindInstancesWordInGrid(const GridType &Grid, const StringType &Word)
@@ -182,9 +164,12 @@ namespace KT::Days
                   const RowType &Row = Grid[i];
                   for (int j = 0; j < Row.size(); ++j)
                   {
-                        uint32_t NumInstancesWord1 = SearchLocationForWordX(Grid, Word1, i, j);
-                        uint32_t NumInstancesWord2 = SearchLocationForWordX(Grid, Word2, i, j);;
-                        NumInstancesWord += (NumInstancesWord1 == 2 && NumInstancesWord2 == 2);
+                      uint8_t  Instances {0};
+                       Instances += SearchWordLineOnGrid(Grid, Word1, i+1, j+1, -1, -1);
+                      Instances += SearchWordLineOnGrid(Grid, Word1, i+1, j-1, +1, -1);
+                      Instances += SearchWordLineOnGrid(Grid, Word1, i-1, j+1, -1, +1);
+                      Instances += SearchWordLineOnGrid(Grid, Word1, i-1, j-1, +1, +1);
+                        NumInstancesWord += (Instances == 2);
                   }
             }
             return NumInstancesWord;
@@ -210,6 +195,6 @@ namespace KT::Days
       {
             GridType Grid = BuildGrid(Input);
 
-            return FindInstancesWordInGridX(Grid, "AM", "AS");
+            return FindInstancesWordInGridX(Grid, "MAS", "AS");
       }
 }

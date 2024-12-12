@@ -38,6 +38,7 @@ enum class EDay : uint8_t {
 // Return value like "01", "02", etc.
 StringType GetDayNumberString(const EDay Day);
 
+// Return value like "Day_01", "Day_02", etc.
 StringType GetDayName(const EDay Day);
 
 std::ostream& operator<<(std::ostream& os, const EDay day);
