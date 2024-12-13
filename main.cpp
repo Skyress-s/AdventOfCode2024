@@ -35,7 +35,7 @@ int main()
     }
 
     getch();
-    std::cin >> std::ws; // Give Used time to read the output and then exit.
+    // std::cin >> std::ws; // Give Used time to read the output and then exit.
 
     return 0;
 }
