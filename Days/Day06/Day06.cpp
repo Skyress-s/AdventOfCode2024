@@ -4,6 +4,8 @@
 
 #include "Day06.h"
 
+#include <algorithm>
+#include <assert.h>
 #include <iostream>
 #include <memory>
 
@@ -18,33 +20,120 @@ struct SGrid
 {
 public:
 	SGrid() = delete;
-	explicit SGrid(const std::vector<std::vector<bool>>& Grid);
 
-	bool At(const Math::SVector2I& Vector)
+	explicit SGrid(std::vector<std::vector<bool>>& Grid, const Math::SVector2I GuardLocation) : m_GuardLocation(GuardLocation)// : m_Grid(Grid)
+	{
+		m_Grid = std::move(Grid);
+	};
+
+	[[nodiscard]] bool At(const Math::SVector2I& Vector) const
 	{
 		return m_Grid[Vector.Y][Vector.X];
 	}
 
+	void SetGuardLocation(const Math::SVector2I& GuardLocation)
+    {
+        m_GuardLocation = GuardLocation;
+    }
+
+	[[nodiscard]] Math::SVector2I GetGuardLocation() const
+    {
+        return m_GuardLocation;
+    }
+
+	[[nodiscard]] bool IsLocationOOB(const Math::SVector2I& Vector) const
+    {
+        return Vector.X < 0 || Vector.Y < 0 || Vector.X >= m_Grid[0].size() || Vector.Y >= m_Grid.size();
+    }
+
 private:
-	const std::vector<std::vector<bool>>& m_Grid;
+	std::vector<std::vector<bool>> m_Grid;
+	Math::SVector2I m_GuardLocation{};
 
 	friend std::ostream& operator<<(std::ostream& os, const SGrid& Grid)
 	{
-
-		for (const auto& Row : Grid.m_Grid)
+		for (std::vector<std::vector<bool>>::const_reverse_iterator YItr = Grid.m_Grid.rbegin(); YItr != Grid.m_Grid.rend(); ++YItr)
 		{
-			for (const auto& Cell : Row)
+			const auto Row = *YItr;
+			for (auto XItr = Row.begin(); XItr != Row.end(); ++XItr)
 			{
-				os << Cell << " ";
+				const uint8_t YIndex = std::ranges::distance(Grid.m_Grid.rbegin(), YItr);
+				const uint8_t XIndex = std::ranges::distance(Row.begin(), XItr);
+				if (Math::SVector2I(XIndex, YIndex) == Grid.m_GuardLocation)
+                {
+                    os << '?' << " ";
+                    continue;
+                }
+				os << (*XItr ? '#' : '.') << " ";
 			}
-			os << '\n';
+			std::cout << '\n';
 		}
 		return os;
 	}
 };
 
-SGrid::SGrid(const std::vector<std::vector<bool>>& Grid) : m_Grid(Grid)
+SGrid BuildGridAndGetStartLocation(const std::vector<StringType>& Lines)
 {
+	assert(!Lines.empty());
+
+	std::vector<std::vector<bool>> GridValues;
+	GridValues.reserve(Lines[0].size());
+
+	Math::SVector2I GuardLocation {};
+	for (int i = 0; i < Lines.size(); ++i)
+	{
+		GridValues.emplace_back();
+		const StringType& Line = Lines[i];
+		for (int j = 0; j < Line.size(); ++j)
+		{
+			const char& Char = Line[j];
+			switch (Char)
+			{
+			case '.':
+				GridValues[i].emplace_back(false);
+				break;
+			case '#':
+				GridValues[i].emplace_back(true);
+				break;
+            case '^':
+			case 'v':
+			case '<':
+			case '>':
+				GuardLocation = Math::SVector2I(j, i);
+			default:
+				GridValues[i].emplace_back(false);
+				break;
+			}
+		}
+	}
+	std::reverse(GridValues.begin(), GridValues.end());
+	return SGrid(GridValues, GuardLocation);
+}
+
+bool IsPositionBlocked(const SGrid& Grid, const Math::SVector2I& Position)
+{
+    return Grid.At(Position);
+}
+
+Math::SVector2I RotateDirectionClockwise(const Math::SVector2I& Direction)
+{
+	int16_t X = 0 * Direction.X + -1 * Direction.Y;
+	int16_t Y = 1 * Direction.X + 0 * Direction.Y;
+	return {X, Y};
+}
+
+// Return the new direction
+Math::SVector2I ProcessGuard(SGrid& Grid, const Math::SVector2I& Direction)
+{
+	const Math::SVector2I NewPosition = Grid.GetGuardLocation() + Direction;
+	Math::SVector2I NewDirection = Direction;
+	if (!Grid.IsLocationOOB(NewPosition) && IsPositionBlocked(Grid, NewPosition))
+    {
+		NewDirection = RotateDirectionClockwise(Direction);
+		return NewDirection;
+    }
+    Grid.SetGuardLocation(NewPosition);
+    return Direction;
 }
 
 namespace KT::Days
@@ -56,10 +145,20 @@ EDay Day06::GetDay() const
 
 int32_t Day06::SolvePart1(const std::vector<StringType>& Input)
 {
-	std::vector<std::vector<bool>> TestGrid{{true, true, false}, {true, true, false}, {true, true, false}};
-	SGrid Grid(TestGrid);
+	SGrid Grid = BuildGridAndGetStartLocation(Input);
+	std::cout << Grid << '\n'; // that's so cool!
 
-	std::cout << Grid << '\n';
+	Math::SVector2I Direction {0, 1};
+
+	while (true)
+	{
+		std::cout << Grid << '\n'; // that's so cool!
+		Direction = ProcessGuard(Grid, Direction);
+		if (Grid.IsLocationOOB(Grid.GetGuardLocation()))
+		{
+			break;
+		}
+	}
 
 	return 0;
 }
