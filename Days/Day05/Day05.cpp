@@ -21,6 +21,19 @@ std::ostream& operator<<(std::ostream& os, const PageOrderingRulePairType& rule)
     return os;
 }
 
+std::ostream& operator<<(std::ostream& os, const UpdateVectorType& Update){
+    os << "{";
+    if (!Update.empty()){
+        os << *Update.begin();
+        for (auto itr = Update.begin() + 1; itr != Update.end(); ++itr) {
+            auto Page = *itr;
+            os << ", "<< Page;
+        }
+    }
+    os << "}";
+    return os;
+}
+
 void PrintRules(const std::vector<PageOrderingRulePairType>& Rules){
     for (const PageOrderingRulePairType& Rule : Rules){
         std::cout << "Rule: " << Rule.first << " -> " << Rule.second << std::endl;
@@ -76,16 +89,61 @@ bool UpdateContainsPageOrderRule(const UpdateVectorType& Updates, const PageOrde
     return std::ranges::distance(filter_view.begin(), filter_view.end()) == 2;
 }
 
+bool DoesUpdateSatisfyRule(const UpdateVectorType& Update, const PageOrderingRulePairType& Rule)
+{
+    // If updates does not contain the rule, we assume it to be valid
+    if (!UpdateContainsPageOrderRule(Update, Rule)) {
+        return true;
+    }
+
+    // The rule exists. Is it satisfied?
+    auto first_itr = std::find(Update.begin(), Update.end(), Rule.first);
+    auto second_itr = std::find(Update.begin(), Update.end(), Rule.second);
+
+    const uint16_t FirstIndex = std::distance(Update.begin(), first_itr);
+    const uint16_t SecondIndex = std::distance(Update.begin(), second_itr);
+
+    if (FirstIndex > SecondIndex) {
+        return false;
+    }
+    return true;
+}
+
 bool DoesUpdateSatisfyRules(const UpdateVectorType& Update, const std::vector<PageOrderingRulePairType>& Rules)
 {
-    for (const PageOrderingRulePairType& Rule : Rules) {
+    return std::ranges::all_of(Rules, [Update](const PageOrderingRulePairType& Rule){
+        return DoesUpdateSatisfyRule(Update, Rule);
+    });
+//    for (const PageOrderingRulePairType& Rule : Rules) {
+//        // If updates does not contain the rule, we assume it to be valid
+//        if (!UpdateContainsPageOrderRule(Update, Rule)) {
+//            continue;
+//        }
+//
+//        // The rule exists. Is it satisfied?
+//
+//        auto first_itr = std::find(Update.begin(), Update.end(), Rule.first);
+//        auto second_itr = std::find(Update.begin(), Update.end(), Rule.second);
+//
+//        const uint16_t FirstIndex = std::distance(Update.begin(), first_itr);
+//        const uint16_t SecondIndex = std::distance(Update.begin(), second_itr);
+//
+//        if (FirstIndex > SecondIndex) {
+//            return false;
+//        }
+//    }
+//    return true;
+}
+
+// Lets try and make this recursive, why not. (Though a loop would be better)
+void CorrectUpdate(UpdateVectorType& Update, const std::vector<PageOrderingRulePairType>& Rules){
+    for (const auto& Rule: Rules){
         // If updates does not contain the rule, we assume it to be valid
         if (!UpdateContainsPageOrderRule(Update, Rule)) {
             continue;
         }
 
         // The rule exists. Is it satisfied?
-
         auto first_itr = std::find(Update.begin(), Update.end(), Rule.first);
         auto second_itr = std::find(Update.begin(), Update.end(), Rule.second);
 
@@ -93,10 +151,14 @@ bool DoesUpdateSatisfyRules(const UpdateVectorType& Update, const std::vector<Pa
         const uint16_t SecondIndex = std::distance(Update.begin(), second_itr);
 
         if (FirstIndex > SecondIndex) {
-            return false;
+            std::swap(*first_itr, *second_itr);
+            break;
         }
     }
-    return true;
+
+    if (!DoesUpdateSatisfyRules(Update, Rules)){
+        CorrectUpdate(Update, Rules);
+    }
 }
 
 
@@ -127,7 +189,31 @@ namespace KT::Days {
         }
 
         int32_t Day05::SolvePart2(const std::vector<StringType> &Input) {
-            return 0;
+                std::vector<PageOrderingRulePairType> Rules{};
+                std::vector<UpdateVectorType> Updates{};
+                BuildRulesAndUpdates(Input, Updates, Rules);
+
+                PrintRules(Rules);
+                PrintUpdates(Updates);
+
+                uint16_t Sum = 0;
+                for (auto UpdateItr = Updates.begin(); UpdateItr != Updates.end(); UpdateItr++) {
+                    UpdateVectorType& Update = *UpdateItr;
+                    const bool bSatifiesRules = DoesUpdateSatisfyRules(Update, Rules);
+                    const uint8_t Index = std::ranges::distance(Updates.begin(), UpdateItr);
+//                    std::cout << "Update: " << Index << " Satisfies Rules: " << bSatifiesRules << "\n";
+
+                    if (!bSatifiesRules){
+                        CorrectUpdate(Update, Rules);
+                        std::cout << "Corrected Update: " << Update << "\n";
+                        uint16_t MiddleNumber = Update[Update.size() / 2];
+                        std::cout << "Number Chosen : " << MiddleNumber << "\n";
+                        Sum += MiddleNumber;
+                    }
+
+                }
+
+            return Sum;
         }
 
 }
