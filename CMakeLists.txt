@@ -47,6 +47,10 @@ add_executable(AdventOfCode main.cpp
         Base/TemplateTest.cpp
         Base/TemplateTest.h
         Base/ConsoleUtility/ListChoice.tpp
+        Days/Day06/Day06.cpp
+        Days/Day06/Day06.h
+        Base/Vector2D/Vector2D.cpp
+        Base/Vector2D/Vector2D.h
 )
 
 # Copies the resources into the binary directory

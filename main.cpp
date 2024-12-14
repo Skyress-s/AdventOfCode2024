@@ -7,6 +7,7 @@
 #include "Days/Day03/Day03.h"
 #include "Days/Day04/Day04.h"
 #include "Days/Day05/Day05.h"
+#include "Days/Day06/Day06.h"
 #include "Utility/IOUtility.h"
 #include "Utility/ParseUtility/ParseUtility.h"
 #include "Base/ConsoleUtility/ListChoice.h"
@@ -26,6 +27,7 @@ int main()
     Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day03>());
     Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day04>());
     Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day05>());
+    Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day06>());
 
     try {
         Menu.ChooseProblem();
