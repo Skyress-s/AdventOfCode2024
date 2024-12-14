@@ -8,6 +8,9 @@
 #include <assert.h>
 #include <iostream>
 #include <memory>
+#include <unordered_set>
+#include <iostream>
+#include <ranges>
 
 #include "Base/DayEnum/DayEnum.h"
 #include "Base/Vector2D/Vector2D.h"
@@ -21,7 +24,7 @@ struct SGrid
 public:
 	SGrid() = delete;
 
-	explicit SGrid(std::vector<std::vector<bool>>& Grid, const Math::SVector2I GuardLocation) : m_GuardLocation(GuardLocation)// : m_Grid(Grid)
+	explicit SGrid(std::vector<std::vector<bool>>& Grid, const Math::SVector2I GuardLocation) : m_GuardLocation(GuardLocation) // : m_Grid(Grid)
 	{
 		m_Grid = std::move(Grid);
 	};
@@ -32,19 +35,40 @@ public:
 	}
 
 	void SetGuardLocation(const Math::SVector2I& GuardLocation)
-    {
-        m_GuardLocation = GuardLocation;
-    }
+	{
+		m_GuardLocation = GuardLocation;
+	}
 
 	[[nodiscard]] Math::SVector2I GetGuardLocation() const
-    {
-        return m_GuardLocation;
-    }
+	{
+		return m_GuardLocation;
+	}
 
 	[[nodiscard]] bool IsLocationOOB(const Math::SVector2I& Vector) const
-    {
-        return Vector.X < 0 || Vector.Y < 0 || Vector.X >= m_Grid[0].size() || Vector.Y >= m_Grid.size();
-    }
+	{
+		return Vector.X < 0 || Vector.Y < 0 || Vector.X >= m_Grid[0].size() || Vector.Y >= m_Grid.size();
+	}
+
+	void PrintWithPath(const std::unordered_set<Math::SVector2I>& VisitedLocations)
+	{
+		for (std::vector<std::vector<bool>>::const_reverse_iterator YItr = m_Grid.crbegin(); YItr != m_Grid.crend(); ++YItr)
+		{
+			const auto Row = *YItr;
+			for (auto XItr = Row.begin(); XItr != Row.end(); ++XItr)
+			{
+				const uint8_t YIndex = std::ranges::distance(YItr, m_Grid.rend()) - 1;
+				const uint8_t XIndex = std::ranges::distance(Row.begin(), XItr);
+
+				std::ranges::any_of(VisitedLocations, [XIndex, YIndex](const Math::SVector2I& Location)
+				{
+					return Location == Math::SVector2I(XIndex, YIndex);
+				})
+					? std::cout << 'X'
+					: std::cout << (*XItr ? '#' : '.');
+			}
+			std::cout << '\n';
+		}
+	}
 
 private:
 	std::vector<std::vector<bool>> m_Grid;
@@ -52,18 +76,18 @@ private:
 
 	friend std::ostream& operator<<(std::ostream& os, const SGrid& Grid)
 	{
-		for (std::vector<std::vector<bool>>::const_reverse_iterator YItr = Grid.m_Grid.rbegin(); YItr != Grid.m_Grid.rend(); ++YItr)
+		for (std::vector<std::vector<bool>>::const_reverse_iterator YItr = Grid.m_Grid.crbegin(); YItr != Grid.m_Grid.crend(); ++YItr)
 		{
 			const auto Row = *YItr;
 			for (auto XItr = Row.begin(); XItr != Row.end(); ++XItr)
 			{
-				const uint8_t YIndex = std::ranges::distance(Grid.m_Grid.rbegin(), YItr);
+				const uint8_t YIndex = std::ranges::distance(YItr, Grid.m_Grid.rend()) - 1;
 				const uint8_t XIndex = std::ranges::distance(Row.begin(), XItr);
 				if (Math::SVector2I(XIndex, YIndex) == Grid.m_GuardLocation)
-                {
-                    os << '?' << " ";
-                    continue;
-                }
+				{
+					os << '?' << " ";
+					continue;
+				}
 				os << (*XItr ? '#' : '.') << " ";
 			}
 			std::cout << '\n';
@@ -79,7 +103,7 @@ SGrid BuildGridAndGetStartLocation(const std::vector<StringType>& Lines)
 	std::vector<std::vector<bool>> GridValues;
 	GridValues.reserve(Lines[0].size());
 
-	Math::SVector2I GuardLocation {};
+	Math::SVector2I GuardLocation{};
 	for (int i = 0; i < Lines.size(); ++i)
 	{
 		GridValues.emplace_back();
@@ -95,11 +119,11 @@ SGrid BuildGridAndGetStartLocation(const std::vector<StringType>& Lines)
 			case '#':
 				GridValues[i].emplace_back(true);
 				break;
-            case '^':
+			case '^':
 			case 'v':
 			case '<':
 			case '>':
-				GuardLocation = Math::SVector2I(j, i);
+				GuardLocation = Math::SVector2I(j, i); // whoopsie poopy
 			default:
 				GridValues[i].emplace_back(false);
 				break;
@@ -112,13 +136,13 @@ SGrid BuildGridAndGetStartLocation(const std::vector<StringType>& Lines)
 
 bool IsPositionBlocked(const SGrid& Grid, const Math::SVector2I& Position)
 {
-    return Grid.At(Position);
+	return Grid.At(Position);
 }
 
 Math::SVector2I RotateDirectionClockwise(const Math::SVector2I& Direction)
 {
-	int16_t X = 0 * Direction.X + -1 * Direction.Y;
-	int16_t Y = 1 * Direction.X + 0 * Direction.Y;
+	int16_t X = 0 * Direction.X + 1 * Direction.Y;
+	int16_t Y = -1 * Direction.X + 0 * Direction.Y;
 	return {X, Y};
 }
 
@@ -128,12 +152,12 @@ Math::SVector2I ProcessGuard(SGrid& Grid, const Math::SVector2I& Direction)
 	const Math::SVector2I NewPosition = Grid.GetGuardLocation() + Direction;
 	Math::SVector2I NewDirection = Direction;
 	if (!Grid.IsLocationOOB(NewPosition) && IsPositionBlocked(Grid, NewPosition))
-    {
+	{
 		NewDirection = RotateDirectionClockwise(Direction);
 		return NewDirection;
-    }
-    Grid.SetGuardLocation(NewPosition);
-    return Direction;
+	}
+	Grid.SetGuardLocation(NewPosition);
+	return Direction;
 }
 
 namespace KT::Days
@@ -145,22 +169,34 @@ EDay Day06::GetDay() const
 
 int32_t Day06::SolvePart1(const std::vector<StringType>& Input)
 {
+	std::unordered_set<Math::SVector2I> VisitedLocations{};
 	SGrid Grid = BuildGridAndGetStartLocation(Input);
-	std::cout << Grid << '\n'; // that's so cool!
+	// std::cout << Grid << '\n'; // that's so cool!
+	Math::SVector2I Direction{0, 1};
 
-	Math::SVector2I Direction {0, 1};
+	std::cout << Grid.GetGuardLocation() << '\n';
+	VisitedLocations.emplace(Grid.GetGuardLocation());
 
 	while (true)
 	{
-		std::cout << Grid << '\n'; // that's so cool!
+		// std::cout << Grid << '\n'; // that's so cool!
 		Direction = ProcessGuard(Grid, Direction);
 		if (Grid.IsLocationOOB(Grid.GetGuardLocation()))
 		{
 			break;
 		}
+		// std::cout << Grid.GetGuardLocation() << '\n';
+		VisitedLocations.emplace(Grid.GetGuardLocation());
 	}
 
-	return 0;
+	for (auto visited_location : VisitedLocations)
+	{
+		std::cout << visited_location << '\n';
+	}
+
+	Grid.PrintWithPath(VisitedLocations);
+
+	return (int32_t)VisitedLocations.size();
 }
 
 int32_t Day06::SolvePart2(const std::vector<StringType>& Input)
