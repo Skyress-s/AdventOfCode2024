@@ -202,6 +202,58 @@ int32_t Day06::SolvePart1(const std::vector<StringType>& Input)
 
 int32_t Day06::SolvePart2(const std::vector<StringType>& Input)
 {
-	return 0;
+	std::vector<Math::SVector2I> VisitedLocations{};
+	// std::unordered_set<Math::SVector2I> VisitedLocations{};
+	uint16_t PossibleObstructions = 0;
+	SGrid Grid = BuildGridAndGetStartLocation(Input);
+	// std::cout << Grid << '\n'; // that's so cool!
+	Math::SVector2I Direction{0, 1};
+
+	std::cout << Grid.GetGuardLocation() << '\n';
+	VisitedLocations.emplace_back(Grid.GetGuardLocation());
+
+	while (true)
+	{
+		// std::cout << Grid << '\n'; // that's so cool!
+		Direction = ProcessGuard(Grid, Direction);
+		if (Grid.IsLocationOOB(Grid.GetGuardLocation()))
+		{
+			break;
+		}
+		// std::cout << Grid.GetGuardLocation() << '\n';
+		auto FoundElement = std::find(VisitedLocations.begin(), VisitedLocations.end(), Grid.GetGuardLocation());
+		// auto FoundElement = VisitedLocations.find(Grid.GetGuardLocation());
+		if (Grid.GetGuardLocation() != VisitedLocations.back())
+			VisitedLocations.emplace_back(Grid.GetGuardLocation());
+
+		if (FoundElement != VisitedLocations.end()) // found element
+		{
+			const Math::SVector2I NewLocation = Grid.GetGuardLocation() + RotateDirectionClockwise(Direction);
+			std::ranges::find_if(VisitedLocations.begin(), VisitedLocations.end(), [NewLocation](const Math::SVector2I& Location)
+            {
+                return Location == NewLocation && ;
+            });
+			const auto NextElementItr = std::find(VisitedLocations.begin(), VisitedLocations.end(), NewLocation);
+			if (NextElementItr != VisitedLocations.end())
+			{
+				const auto FoundElementIndex = std::distance(VisitedLocations.begin(), FoundElement);
+				const auto NextElementIndex = std::distance(VisitedLocations.begin(), NextElementItr);
+				if (NextElementIndex > FoundElementIndex)
+                {
+                    PossibleObstructions++;
+                }
+			}
+			// PossibleObstructions++;
+			continue;
+		}
+	}
+
+	for (auto visited_location : VisitedLocations)
+	{
+		std::cout << visited_location << '\n';
+	}
+
+	// return (int32_t)VisitedLocations.size();
+	return PossibleObstructions;
 }
 }
