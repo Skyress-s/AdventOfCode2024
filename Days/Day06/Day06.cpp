@@ -123,7 +123,7 @@ SGrid BuildGridAndGetStartLocation(const std::vector<StringType>& Lines)
 			case 'v':
 			case '<':
 			case '>':
-				GuardLocation = Math::SVector2I(j, i); // whoopsie poopy
+				GuardLocation = Math::SVector2I(j, i);
 			default:
 				GridValues[i].emplace_back(false);
 				break;
@@ -131,6 +131,7 @@ SGrid BuildGridAndGetStartLocation(const std::vector<StringType>& Lines)
 		}
 	}
 	std::reverse(GridValues.begin(), GridValues.end());
+	GuardLocation.Y = GridValues.size() - 1 - GuardLocation.Y;
 	return SGrid(GridValues, GuardLocation);
 }
 
