@@ -220,32 +220,25 @@ int32_t Day06::SolvePart2(const std::vector<StringType>& Input)
 		{
 			break;
 		}
+
+		if (Grid.GetGuardLocation() == VisitedLocations.back()) // Not same as last element
+			continue;
+
 		// std::cout << Grid.GetGuardLocation() << '\n';
 		auto FoundElement = std::find(VisitedLocations.begin(), VisitedLocations.end(), Grid.GetGuardLocation());
 		// auto FoundElement = VisitedLocations.find(Grid.GetGuardLocation());
-		if (Grid.GetGuardLocation() != VisitedLocations.back())
-			VisitedLocations.emplace_back(Grid.GetGuardLocation());
 
-		if (FoundElement != VisitedLocations.end()) // found element
-		{
-			const Math::SVector2I NewLocation = Grid.GetGuardLocation() + RotateDirectionClockwise(Direction);
-			std::ranges::find_if(VisitedLocations.begin(), VisitedLocations.end(), [NewLocation](const Math::SVector2I& Location)
-            {
-                return Location == NewLocation && ;
-            });
-			const auto NextElementItr = std::find(VisitedLocations.begin(), VisitedLocations.end(), NewLocation);
-			if (NextElementItr != VisitedLocations.end())
+		// if (FoundElement != VisitedLocations.end()) // found element
+		// {
+			const Math::SVector2I NextLocation = Grid.GetGuardLocation() + RotateDirectionClockwise(Direction);
+
+			if (*(FoundElement+1) == NextLocation)
 			{
-				const auto FoundElementIndex = std::distance(VisitedLocations.begin(), FoundElement);
-				const auto NextElementIndex = std::distance(VisitedLocations.begin(), NextElementItr);
-				if (NextElementIndex > FoundElementIndex)
-                {
                     PossibleObstructions++;
-                }
 			}
-			// PossibleObstructions++;
-			continue;
-		}
+		// }
+
+		VisitedLocations.emplace_back(Grid.GetGuardLocation());
 	}
 
 	for (auto visited_location : VisitedLocations)
