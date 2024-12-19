@@ -68,8 +68,6 @@ void MenuSystem::SolveProblem1(const EDay Day, const bool bTest) const {
     const std::vector<StringType> Lines = KT::IOUtility::ReadFile(Path);
     const int32_t AnswerPart1 = m_Problems.find(Day)->second->SolvePart1(Lines);
     std::cout << "Answer To Part1: " << AnswerPart1 << std::endl;
-
-    std::cout << Multiply<int>(5, 5) << std::endl;
 }
 
 void MenuSystem::SolveProblem2(const EDay Day, const bool bTest) const {
