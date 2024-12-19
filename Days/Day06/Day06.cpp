@@ -20,6 +20,11 @@
 // | --> X
 
 
+enum EDirection
+{
+	Up, Down, Left, Right
+};
+
 struct SGrid
 {
 public:
@@ -50,8 +55,16 @@ public:
 		return Vector.X < 0 || Vector.Y < 0 || Vector.X >= m_Grid[0].size() || Vector.Y >= m_Grid.size();
 	}
 
-	void PrintWithPath(const std::unordered_set<Math::SVector2I>& VisitedLocations) const
+	template<typename TIterator>
+	requires std::forward_iterator<TIterator>
+	// typename std::iterator_traits<TIterator>::value_type
+	void PrintWithPath(TIterator Begin, TIterator End) const
 	{
+		// using ValueType = typename std::iterator_traits<TIterator>::value_type;
+		// for (TIterator Itr = Begin; Itr != End; ++Itr)
+		// {
+		//
+		// }
 		for (std::vector<std::vector<bool>>::const_reverse_iterator YItr = m_Grid.crbegin(); YItr != m_Grid.crend(); ++YItr)
 		{
 			const auto Row = *YItr;
@@ -60,7 +73,7 @@ public:
 				const uint8_t YIndex = std::ranges::distance(YItr, m_Grid.rend()) - 1;
 				const uint8_t XIndex = std::ranges::distance(Row.begin(), XItr);
 
-				std::ranges::any_of(VisitedLocations, [XIndex, YIndex](const Math::SVector2I& Location)
+				std::ranges::any_of(Begin, End, [XIndex, YIndex](const Math::SVector2I& Location)
 				{
 					return Location == Math::SVector2I(XIndex, YIndex);
 				})
@@ -214,7 +227,7 @@ int32_t Day06::SolvePart1(const std::vector<StringType>& Input)
 		std::cout << visited_location << '\n';
 	}
 
-	Grid.PrintWithPath(VisitedLocations);
+	Grid.PrintWithPath(VisitedLocations.begin(), VisitedLocations.end());
 
 	return (int32_t)VisitedLocations.size();
 }
@@ -228,11 +241,6 @@ std::ostream& operator<<(std::ostream& os, const std::set<Math::SVector2I>& Set)
 	}
 	return os << "}\n";
 }
-
-enum EDirection
-{
-	Up, Down, Left, Right
-};
 
 EDirection GetDirection(const Math::SVector2I& From, const Math::SVector2I& To)
 {
@@ -254,41 +262,49 @@ EDirection GetDirection(const Math::SVector2I& From, const Math::SVector2I& To)
 	}
 }
 
-bool ProcessPath(const SGrid& Grid, const Math::SVector2I& Location, const Math::SVector2I& Direction, const Math::SVector2I& NewObstruction)
+bool ProcessPath(const SGrid& Grid, const Math::SVector2I& StartLocation, const Math::SVector2I& StartDirection, const Math::SVector2I& NewObstruction)
 {
+	// std::cout << "New Path! \n";
 	std::vector<std::pair<Math::SVector2I, EDirection>> VisitedLocations;
-	Math::SVector2I CurrentLocation = Location;
-	Math::SVector2I CurrentDirection = Direction;
+	VisitedLocations.reserve(5000);
+	Math::SVector2I CurrentLocation = StartLocation;
+	Math::SVector2I CurrentDirection = StartDirection;
 
 	uint8_t NumMatches{0};
 	bool bHasLooped{false};
 
-	VisitedLocations.emplace_back(CurrentLocation, EDirection::Up);
+	VisitedLocations.emplace_back(StartLocation, GetDirection(StartLocation, StartLocation + StartDirection));
 
 	while (true)
 	{
-		Math::SVector2I NewPosition = CurrentLocation + CurrentDirection;
+		const Math::SVector2I NewPosition = CurrentLocation + CurrentDirection;
+		const Math::SVector2I NewDirection = CurrentDirection;
 
 		if (Grid.IsLocationOOB(NewPosition))
 		{
 			return false;
 		}
 
-		Math::SVector2I NewDirection = CurrentDirection;
 		if (IsPositionBlocked(Grid, NewPosition) || NewPosition == NewObstruction)
 		{
 			CurrentDirection = RotateDirectionClockwise(CurrentDirection);
 		}
-		else
+		else // New Valid Position
 		{
-			std::pair<Math::SVector2I, EDirection> New {NewPosition, GetDirection(CurrentLocation, NewDirection)};
+			std::pair NewLocationPair {NewPosition, GetDirection(NewPosition,  NewPosition + NewDirection)};
 
-			std::ranges::all_of(VisitedLocations, [New](const auto& VisitedLocation)
+			auto LoopFilter = VisitedLocations | std::views::filter([NewLocationPair](const auto& VisitedLocation)
 			{
-				return VisitedLocation == New.first;
+				return VisitedLocation == NewLocationPair;
 			});
 
-			VisitedLocations.emplace_back();
+			const auto bLoop = !LoopFilter.empty();
+			if (bLoop)
+            {
+				return true;
+            }
+
+			VisitedLocations.emplace_back(NewLocationPair);
 			CurrentLocation = NewPosition;
 
 		}
@@ -297,21 +313,19 @@ bool ProcessPath(const SGrid& Grid, const Math::SVector2I& Location, const Math:
 
 int32_t Day06::SolvePart2(const std::vector<StringType>& Input)
 {
-	// std::vector<Math::SVector2I> VisitedLocations{};
-	// std::unordered_set<Math::SVector2I> VisitedLocations{};
-	uint16_t PossibleObstructions = 0;
 	SGrid Grid = BuildGridAndGetStartLocation(Input);
-	// std::cout << Grid << '\n'; // that's so cool!
 	Math::SVector2I Direction{0, 1};
 
 	uint16_t NumMatches{0};
 
 	std::unordered_set<Math::SVector2I> Obstructions{};
 
-	std::unordered_set<Math::SVector2I> VisitedLocations;
+	std::vector<Math::SVector2I> VisitedLocations;
+	const Math::SVector2I StartLocation = Grid.GetGuardLocation();
+	const Math::SVector2I StartDirection = Direction;
 	Math::SVector2I CurrentLocation = Grid.GetGuardLocation();
 	Math::SVector2I CurrentDirection = Direction;
-	VisitedLocations.emplace(CurrentLocation);
+	VisitedLocations.emplace_back(CurrentLocation);
 	while (true)
 	{
 		Math::SVector2I NewPosition = CurrentLocation + CurrentDirection;
@@ -326,20 +340,28 @@ int32_t Day06::SolvePart2(const std::vector<StringType>& Input)
 		{
 			CurrentDirection = RotateDirectionClockwise(CurrentDirection);
 		}
-		else
+		else // New Valid Location
 		{
 			CurrentLocation = NewPosition;
-			if (ProcessPath(Grid, NewPosition, RotateDirectionClockwise(CurrentDirection), NewPosition + CurrentDirection))
-			{
-				if (!Obstructions.contains(CurrentLocation + CurrentDirection))
-				{
-					NumMatches++;
-					Obstructions.emplace(CurrentLocation + CurrentDirection);
-				}
-			}
-			VisitedLocations.emplace(CurrentLocation);
+			VisitedLocations.emplace_back(CurrentLocation);
 		}
 	}
+
+	// Skipping first one.
+	for (auto Itr = ++VisitedLocations.begin(); Itr != VisitedLocations.end(); ++Itr)
+	{
+		if (ProcessPath(Grid, StartLocation, StartDirection, *Itr))
+        {
+            if (!Obstructions.contains(*Itr + CurrentDirection))
+            {
+                NumMatches++;
+                Obstructions.emplace(*Itr + CurrentDirection);
+            }
+        }
+
+
+	}
+
 	return NumMatches;
 }
 }

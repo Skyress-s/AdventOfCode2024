@@ -18,7 +18,7 @@ void ParseUtility::ParseTest(const StringType& String, std::vector<T>& Output) {
     }
 }
 
-// Thanks to copilot for this function.
+// Thanks to copilot for this function. Need to understand this hehe
 template<typename T>
 void ParseTest(const std::string& Input, std::vector<T>& Output, const std::string& Delimiters) {
     std::istringstream stream(Input);

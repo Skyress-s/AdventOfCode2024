@@ -51,6 +51,8 @@ add_executable(AdventOfCode main.cpp
         Days/Day06/Day06.h
         Base/Vector2D/Vector2D.cpp
         Base/Vector2D/Vector2D.h
+        Days/Day07/Day07.cpp
+        Days/Day07/Day07.h
 )
 
 # Copies the resources into the binary directory

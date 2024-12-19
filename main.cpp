@@ -1,5 +1,6 @@
 ﻿#include <variant>
 #include <functional>
+#include <bits/ranges_algo.h>
 
 #include "Base/MenuSystem/MenuSystem.h"
 #include "Days/Day01/Day01.h"
@@ -12,9 +13,11 @@
 #include "Utility/ParseUtility/ParseUtility.h"
 #include "Base/ConsoleUtility/ListChoice.h"
 #include "Base/TemplateTest.h"
+#include "Days/Day07/Day07.h"
 
 int main()
 {
+
     // std::cout << "Size of address: " << sizeof(void*) << std::endl;
 
     const int Choice = KT::UI::ListChoice2<int>({{1, "Solve Part 1"}, {2, "Solve Part 2"}, {3, "Solve Part 1 and 2"}}, "Question Setup");
@@ -28,6 +31,7 @@ int main()
     Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day04>());
     Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day05>());
     Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day06>());
+    Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day07>());
 
     try {
         Menu.ChooseProblem();
