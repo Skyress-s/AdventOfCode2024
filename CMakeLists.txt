@@ -53,6 +53,12 @@ add_executable(AdventOfCode main.cpp
         Base/Vector2D/Vector2D.h
         Days/Day07/Day07.cpp
         Days/Day07/Day07.h
+        Days/Day08/Day08.cpp
+        Days/Day08/Day08.h
+        Base/Grid/TGrid.tpp
+        Base/Grid/TGrid.h
+        Base/Grid/GridUtility.tpp
+        Base/Grid/GridUtility.h
 )
 
 # Copies the resources into the binary directory

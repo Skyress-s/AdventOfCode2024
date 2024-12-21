@@ -14,6 +14,7 @@
 #include "Base/ConsoleUtility/ListChoice.h"
 #include "Base/TemplateTest.h"
 #include "Days/Day07/Day07.h"
+#include "Days/Day08/Day08.h"
 
 int main()
 {
@@ -32,6 +33,7 @@ int main()
     Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day05>());
     Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day06>());
     Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day07>());
+    Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day08>());
 
     try {
         Menu.ChooseProblem();
