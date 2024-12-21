@@ -200,7 +200,7 @@ EDay Day06::GetDay() const
 	return EDay::Day06;
 }
 
-int32_t Day06::SolvePart1(const std::vector<StringType>& Input)
+IDayProblemBase::DayReturnType Day06::SolvePart1(const std::vector<StringType>& Input)
 {
 	std::unordered_set<Math::SVector2I> VisitedLocations{};
 	SGrid Grid = BuildGridAndGetStartLocation(Input);
