@@ -12,13 +12,17 @@
 enum class EDay: uint8_t;
 
 
+
 class IDayProblemBase {
 public:
+
+    using DayReturnType = int32_t;
+
     [[nodiscard]] virtual EDay GetDay() const = 0;
     IDayProblemBase() = default;
     virtual ~IDayProblemBase() = default;
 
 public:
-    virtual int32_t SolvePart1(const std::vector<StringType>& Input) = 0;
+    virtual DayReturnType SolvePart1(const std::vector<StringType>& Input) = 0;
     virtual int32_t SolvePart2(const std::vector<StringType>& Input) = 0;
 };

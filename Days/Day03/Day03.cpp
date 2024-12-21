@@ -19,7 +19,7 @@ EDay Day03::GetDay() const
 
 constexpr StringType k_MulInstruction = "mul(";
 
-int32_t Day03::SolvePart1(const std::vector<StringType>& Input) {
+IDayProblemBase::DayReturnType Day03::SolvePart1(const std::vector<StringType>& Input) {
       int32_t Sum{0};
 
       // I should probably use some pattern matching lib or std::variant / std::visit here?

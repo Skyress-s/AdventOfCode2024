@@ -33,8 +33,7 @@ void ToLists(const std::vector<StringType>& Lines, std::vector<int32_t>& LeftNum
 }
 
 
-
-int32_t Day01::SolvePart1(const std::vector<StringType>& Input) {
+IDayProblemBase::DayReturnType Day01::SolvePart1(const std::vector<StringType>& Input) {
         std::vector<int32_t> LeftNumbers, RightNumbers;
         ToLists(Input, LeftNumbers, RightNumbers);
 

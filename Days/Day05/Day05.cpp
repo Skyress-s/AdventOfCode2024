@@ -163,7 +163,7 @@ namespace KT::Days {
             return EDay::Day05;
     }
 
-    int32_t Day05::SolvePart1(const std::vector<StringType>& Input) {
+    IDayProblemBase::DayReturnType Day05::SolvePart1(const std::vector<StringType>& Input) {
             std::vector<PageOrderingRulePairType> Rules{};
             std::vector<UpdateVectorType> Updates{};
             BuildRulesAndUpdates(Input, Updates, Rules);

@@ -5,6 +5,7 @@
 #include "Day07.h"
 
 #include <algorithm>
+#include <cmath>
 #include <fstream>
 #include <iostream>
 
@@ -19,6 +20,20 @@ enum class EOperation : uint8_t
 	Addition,
 	Multiply
 };
+
+std::ostream& operator<<(std::ostream& OutStream, const EOperation Operation)
+{
+	switch (Operation)
+	{
+	case EOperation::Addition:
+		OutStream << "Addition";
+		break;
+	case EOperation::Multiply:
+		OutStream << "Multiply";
+		break;
+	}
+	return OutStream;
+}
 
 template<typename TStream>
 concept ConceptStreamOut = requires (TStream& Stream, const NumberType& Value)
@@ -56,39 +71,65 @@ EDay Day07::GetDay() const
 	return EDay::Day07;
 }
 
-int32_t Day07::SolvePart1(const std::vector<StringType>& Input)
+IDayProblemBase::DayReturnType Day07::SolvePart1(const std::vector<StringType>& Input)
 {
-	std::ofstream File("print.txt");
-	std::for_each(Input.begin(), Input.end(), [&File](const StringType& Line)
+	uint64_t SumValidEquationResults {};
+	std::for_each(Input.begin(), Input.end(), [&SumValidEquationResults](const StringType& Line)
 	{
 		const auto [EquationResult, Numbers] = ParseEquation(Line); // This is very nice!
 
-		std::tuple<std::vector<EOperation>, NumberType> Equations {};
+		std::vector<std::tuple<std::vector<EOperation>, NumberType>> Equations {};
+		Equations.reserve(pow(2, Numbers.size() - 1));
+		Equations.emplace_back(std::vector<EOperation>(), Numbers.front());
 
 		NumberType SecondNumber;
-		NumberType FirstNumber;
-		for (const NumberType Number : Numbers)
+		for (auto Itr = ++Numbers.cbegin(); Itr != Numbers.cend(); ++Itr)
 		{
-			SecondNumber = Number;
-
-			std::tuple<std::vector<EOperation>, NumberType> NewEquations {};
+			{
+				const NumberType Number = *Itr;
+				SecondNumber = Number;
+			}
+			std::vector<std::tuple<std::vector<EOperation>, NumberType>> NewEquations {};
 
 			for (const auto& [Operations, CurrentSum] : Equations)
 			{
+				const NumberType AdditionSum = CurrentSum + SecondNumber;
+				const NumberType MultiplySum = CurrentSum * SecondNumber;
 
+				std::vector<EOperation> Operations1 {Operations};
+				Operations1.emplace_back(EOperation::Addition);
+				std::vector<EOperation> Operations2 {Operations};
+				Operations2.emplace_back(EOperation::Multiply);
+
+				NewEquations.emplace_back(Operations1, AdditionSum);
+				NewEquations.emplace_back(Operations2, MultiplySum);
 			}
 
-			const NumberType AdditionResult = FirstNumber + SecondNumber;
-			const NumberType MultiplicationResult = FirstNumber * SecondNumber;
+			Equations.swap(NewEquations);
 		}
 
-		// std::ofstream& test2 = File << " haah" << "haha";
-		//
-		// PrintEquation(File, EquationResult, Numbers);
-		StreamEquationTargetAndNumbers(std::cout, EquationResult, Numbers);
+
+		// std::cout << "Equations: ";
+		for (const auto& [Operations, Sum]  : Equations)
+		{
+			// std::cout << "Result: " << Sum << " -> ";
+			// for (const EOperation Operation : Operations)
+			// {
+			// 	std::cout << Operation << " ";
+			// }
+			// std::cout << std::endl;
+
+			if (Sum == EquationResult)
+			{
+				std::cout << "VALID RESULT: " << EquationResult << std::endl;
+				SumValidEquationResults += Sum;
+				break;
+			}
+		}
+		// StreamEquationTargetAndNumbers(std::cout, EquationResult, Numbers);
 	});
-		File.close();
-	return INVALID_RESULT;
+	std::cout << SumValidEquationResults << std::endl;
+	return SumValidEquationResults;
 }
 
 int32_t Day07::SolvePart2(const std::vector<StringType>& Input)

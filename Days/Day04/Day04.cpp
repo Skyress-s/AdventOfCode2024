@@ -180,7 +180,7 @@ namespace KT::Days
             return EDay::Day04;
       }
 
-      int32_t Day04::SolvePart1(const std::vector<StringType> &Input)
+      IDayProblemBase::DayReturnType Day04::SolvePart1(const std::vector<StringType>& Input)
       {
             GridType Grid = BuildGrid(Input);
 
