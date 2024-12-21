@@ -50,7 +50,7 @@ IDayProblemBase::DayReturnType Day01::SolvePart1(const std::vector<StringType>& 
         return TotalDiff;
 }
 
-int32_t Day01::SolvePart2(const std::vector<StringType>& Input) {
+IDayProblemBase::DayReturnType Day01::SolvePart2(const std::vector<StringType>& Input) {
         std::vector<int32_t> LeftNumbers, RightNumbers;
         ToLists(Input, LeftNumbers, RightNumbers);
 

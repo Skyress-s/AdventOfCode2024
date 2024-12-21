@@ -184,7 +184,7 @@ namespace KT::Days {
             return Sum;
     }
 
-    int32_t Day05::SolvePart2(const std::vector<StringType>& Input) {
+    IDayProblemBase::DayReturnType Day05::SolvePart2(const std::vector<StringType>& Input) {
             std::vector<PageOrderingRulePairType> Rules{};
             std::vector<UpdateVectorType> Updates{};
             BuildRulesAndUpdates(Input, Updates, Rules);

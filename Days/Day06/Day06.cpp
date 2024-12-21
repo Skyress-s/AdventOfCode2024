@@ -311,7 +311,7 @@ bool ProcessPath(const SGrid& Grid, const Math::SVector2I& StartLocation, const 
 	}
 }
 
-int32_t Day06::SolvePart2(const std::vector<StringType>& Input)
+IDayProblemBase::DayReturnType Day06::SolvePart2(const std::vector<StringType>& Input)
 {
 	SGrid Grid = BuildGridAndGetStartLocation(Input);
 	Math::SVector2I Direction{0, 1};

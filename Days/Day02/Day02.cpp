@@ -63,7 +63,7 @@ IDayProblemBase::DayReturnType Day02::SolvePart1(const std::vector<StringType>& 
     return static_cast<int32_t>(TotalSafeReports);
 }
 
-int32_t Day02::SolvePart2(const std::vector<StringType>& Input) {
+IDayProblemBase::DayReturnType Day02::SolvePart2(const std::vector<StringType>& Input) {
     uint32_t TotalSafeReports = 0;
     for (const StringType& Line: Input) {
         std::vector<int32_t> Report;

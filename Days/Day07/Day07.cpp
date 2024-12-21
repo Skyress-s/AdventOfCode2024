@@ -18,7 +18,8 @@ namespace KT::Days
 enum class EOperation : uint8_t
 {
 	Addition,
-	Multiply
+	Multiply,
+	Concatenate
 };
 
 std::ostream& operator<<(std::ostream& OutStream, const EOperation Operation)
@@ -30,6 +31,9 @@ std::ostream& operator<<(std::ostream& OutStream, const EOperation Operation)
 		break;
 	case EOperation::Multiply:
 		OutStream << "Multiply";
+		break;
+	case EOperation::Concatenate:
+		OutStream << "Concatenate";
 		break;
 	}
 	return OutStream;
@@ -132,8 +136,69 @@ IDayProblemBase::DayReturnType Day07::SolvePart1(const std::vector<StringType>& 
 	return SumValidEquationResults;
 }
 
-int32_t Day07::SolvePart2(const std::vector<StringType>& Input)
+IDayProblemBase::DayReturnType Day07::SolvePart2(const std::vector<StringType>& Input)
 {
-	return INVALID_RESULT;
+	uint64_t SumValidEquationResults {};
+	std::for_each(Input.begin(), Input.end(), [&SumValidEquationResults](const StringType& Line)
+	{
+		const auto [EquationResult, Numbers] = ParseEquation(Line); // This is very nice!
+
+		std::vector<std::tuple<std::vector<EOperation>, NumberType>> Equations {};
+		Equations.reserve(pow(2, Numbers.size() - 1));
+		Equations.emplace_back(std::vector<EOperation>(), Numbers.front());
+
+		NumberType SecondNumber;
+		for (auto Itr = ++Numbers.cbegin(); Itr != Numbers.cend(); ++Itr)
+		{
+			{
+				const NumberType Number = *Itr;
+				SecondNumber = Number;
+			}
+			std::vector<std::tuple<std::vector<EOperation>, NumberType>> NewEquations {};
+
+			for (const auto& [Operations, CurrentSum] : Equations)
+			{
+				const NumberType AdditionSum = CurrentSum + SecondNumber;
+				const NumberType MultiplySum = CurrentSum * SecondNumber;
+				const NumberType ConcatenateSum = std::stoll(std::to_string(CurrentSum) + std::to_string(SecondNumber));
+
+				// These are not nececary for the calculation. Should be removed.
+				std::vector<EOperation> Operations1 {Operations};
+				Operations1.emplace_back(EOperation::Addition);
+				std::vector<EOperation> Operations2 {Operations};
+				Operations2.emplace_back(EOperation::Multiply);
+				std::vector<EOperation> Operations3 {Operations};
+				Operations3.emplace_back(EOperation::Concatenate);
+
+				NewEquations.emplace_back(Operations1, AdditionSum);
+				NewEquations.emplace_back(Operations2, MultiplySum);
+				NewEquations.emplace_back(Operations3, ConcatenateSum);
+			}
+
+			Equations.swap(NewEquations);
+		}
+
+
+		// std::cout << "Equations: ";
+		for (const auto& [Operations, Sum]  : Equations)
+		{
+			// std::cout << "Result: " << Sum << " -> ";
+			// for (const EOperation Operation : Operations)
+			// {
+			// 	std::cout << Operation << " ";
+			// }
+			// std::cout << std::endl;
+
+			if (Sum == EquationResult)
+			{
+				std::cout << "VALID RESULT: " << EquationResult << std::endl;
+				SumValidEquationResults += Sum;
+				break;
+			}
+		}
+		// StreamEquationTargetAndNumbers(std::cout, EquationResult, Numbers);
+	});
+	std::cout << SumValidEquationResults << std::endl;
+	return SumValidEquationResults;
 }
 }

@@ -17,7 +17,7 @@ public:
 protected:
         DayReturnType SolvePart1(const std::vector<StringType>& Input) override;
 
-        int32_t SolvePart2(const std::vector<StringType>& Input) override;
+        DayReturnType SolvePart2(const std::vector<StringType>& Input) override;
 
         [[nodiscard]] EDay GetDay() const override;
 };

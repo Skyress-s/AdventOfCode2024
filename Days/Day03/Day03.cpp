@@ -113,7 +113,7 @@ std::ostream& operator<<(std::ostream& os, const Instruction& Instruction) {
       return os;
 }
 
-int32_t Day03::SolvePart2(const std::vector<StringType>& Input) {
+IDayProblemBase::DayReturnType Day03::SolvePart2(const std::vector<StringType>& Input) {
 
       std::vector<Instruction> Instructions{};
 

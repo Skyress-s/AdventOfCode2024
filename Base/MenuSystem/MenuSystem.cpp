@@ -66,7 +66,7 @@ void MenuSystem::SolveProblem1(const EDay Day, const bool bTest) const {
         Path = KT::IOUtility::GetInputFilePathFromDay(m_Problems.find(Day)->second->GetDay());
     }
     const std::vector<StringType> Lines = KT::IOUtility::ReadFile(Path);
-    const int32_t AnswerPart1 = m_Problems.find(Day)->second->SolvePart1(Lines);
+    const IDayProblemBase::DayReturnType AnswerPart1 = m_Problems.find(Day)->second->SolvePart1(Lines);
     std::cout << "Answer To Part1: " << AnswerPart1 << std::endl;
 }
 
@@ -81,7 +81,7 @@ void MenuSystem::SolveProblem2(const EDay Day, const bool bTest) const {
         Path = KT::IOUtility::GetInputFilePathFromDay(m_Problems.find(Day)->second->GetDay());
     }
     const std::vector<StringType> Lines = KT::IOUtility::ReadFile(Path);
-    const int32_t AnswerPart2 = m_Problems.find(Day)->second->SolvePart2(Lines);
+    const IDayProblemBase::DayReturnType AnswerPart2 = m_Problems.find(Day)->second->SolvePart2(Lines);
     std::cout << "Answer To Part2: " << AnswerPart2 << std::endl;
 }
 

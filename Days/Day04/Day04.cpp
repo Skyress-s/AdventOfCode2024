@@ -191,7 +191,7 @@ namespace KT::Days
             return FindInstancesWordInGrid(Grid, k_XMAS);
       }
 
-      int32_t Day04::SolvePart2(const std::vector<StringType> &Input)
+      IDayProblemBase::DayReturnType Day04::SolvePart2(const std::vector<StringType>& Input)
       {
             GridType Grid = BuildGrid(Input);
 

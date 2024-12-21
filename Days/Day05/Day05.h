@@ -14,7 +14,7 @@ namespace KT::Days {
         public:
             [[nodiscard]] EDay GetDay() const override;
             virtual DayReturnType SolvePart1(const std::vector<StringType>& Input) override;
-            virtual int32_t SolvePart2(const std::vector<StringType>& Input) override;
+            virtual DayReturnType SolvePart2(const std::vector<StringType>& Input) override;
         };
 
 }
