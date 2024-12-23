@@ -13,11 +13,16 @@
 #include "Utility/ParseUtility/ParseUtility.h"
 #include "Base/ConsoleUtility/ListChoice.h"
 #include "Base/TemplateTest.h"
+#include "Base/Grid/TGrid.h"
 #include "Days/Day07/Day07.h"
 #include "Days/Day08/Day08.h"
 
 int main()
 {
+
+    KT::TGrid<int> Grid({{1, 2, 3}, {4, 5, 6}, {7, 8, 9}});
+    std::vector<float> test {};
+    test.size();
 
     // std::cout << "Size of address: " << sizeof(void*) << std::endl;
 

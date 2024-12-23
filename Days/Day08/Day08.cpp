@@ -4,10 +4,8 @@
 
 #include "Day08.h"
 
-#include <bits/ranges_algo.h>
 
 #include "Base/DayEnum/DayEnum.h"
-#include "Base/Grid/TGrid.h"
 
 namespace KT::Days {
 EDay Day08::GetDay() const
@@ -17,14 +15,16 @@ EDay Day08::GetDay() const
 
 IDayProblemBase::DayReturnType Day08::SolvePart1(const std::vector<StringType>& Input)
 {
-	KT::TGrid<char> test;
-	std::ranges::for_each(Input, [](const StringType& Line)
-	{
-
-	});
+	// KT::TGrid<char> test {{}};
+	// std::ranges::for_each(Input.begin(), Input.end(), [](const StringType& Line)
+	// {
+	//
+	// });
+	return INVALID_RESULT;
 }
 
 IDayProblemBase::DayReturnType Day08::SolvePart2(const std::vector<StringType>& Input)
 {
+	return INVALID_RESULT;
 }
 }

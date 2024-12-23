@@ -3,6 +3,7 @@
 //
 
 #pragma once
+#include <format>
 #include <vector>
 
 namespace Math{ struct SVector2I; }
@@ -22,14 +23,34 @@ public:
 	TGrid() = delete;
 
 	// TGrid(const GridType& Grid) : m_Grid(Grid) {} // good enough for now, maybe we can use std::move in the future.
-	TGrid(const GridType& Grid)
+	explicit TGrid(const GridType& Grid)
 	{
+		assert(!Grid.empty());
+
+		const std::size_t RowLength = Grid[0].size();
+		std::ranges::for_each(++Grid.begin(),  Grid.end(), [RowLength](const RowType& Row)
+		{
+			assert(Row.size() == RowLength);
+		});
+
 		m_Grid = std::move(Grid);
 	} // good enough for now, maybe we can use std::move in the future.
 
-	LengthType GetMaxLength() const;
+	[[nodiscard]] std::size_t GetRowLength() const
+	{
+		return m_Grid.size();
+	}
 
-	[[nodiscard]] const T& At(const Math::SVector2I& Vector) const;
+	[[nodiscard]] std::size_t GetColumnLength() const
+	{
+		return m_Grid[0].size();
+	}
+
+
+	[[nodiscard]] const T& At(const Math::SVector2I& Vector) const
+	{
+
+	}
 
 private:
 	GridType m_Grid;
