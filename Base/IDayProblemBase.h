@@ -16,7 +16,8 @@ enum class EDay: uint8_t;
 class IDayProblemBase {
 public:
 
-    using DayReturnType = uint64_t;
+    using DayReturnType = int64_t;
+    static constexpr DayReturnType INVALID_RESULT = -1;
 
     [[nodiscard]] virtual EDay GetDay() const = 0;
     IDayProblemBase() = default;
