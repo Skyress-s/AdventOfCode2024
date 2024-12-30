@@ -5,6 +5,7 @@
 #include "Day08.h"
 
 #include <iostream>
+#include <ranges>
 
 #include "Base/DayEnum/DayEnum.h"
 #include "Base/Vector2D/Vector2D.h"
@@ -12,23 +13,38 @@
 
 namespace KT::Days
 {
+
 EDay Day08::GetDay() const
 {
-	return EDay::Day08;
+        return EDay::Day08;
+}
+
+TGrid<char> BuildGridFromInput(const std::vector<StringType>& Input)
+{
+        TGrid<char>::GridType Grid;
+        for (auto ItrY = Input.begin(); ItrY != Input.end(); ++ItrY)
+        {
+                TGrid<char>::RowType Row;
+                for (auto ItrX = ItrY->begin(); ItrX != ItrY->end(); ++ItrX)
+                {
+                        Row.push_back(*ItrX);
+                }
+                Grid.push_back(Row);
+        }
+        return TGrid(Grid);
 }
 
 IDayProblemBase::DayReturnType Day08::SolvePart1(const std::vector<StringType>& Input)
 {
-	TGrid<char> Grid({{'a', 'b', 'c'}, {'d', 'e', 'f'}, {'g', 'h', 'i'}});
-	std::cout << Grid << std::endl;
-	std::cout << Grid.At(0,0) << "\n";
-	std::cout << Grid.At(1, 2);
+        TGrid<char> Grid = BuildGridFromInput(Input);
 
-	return INVALID_RESULT;
+
+        std::cout << Grid << std::endl;
+        return INVALID_RESULT;
 }
 
 IDayProblemBase::DayReturnType Day08::SolvePart2(const std::vector<StringType>& Input)
 {
-	return INVALID_RESULT;
+        return INVALID_RESULT;
 }
 }
