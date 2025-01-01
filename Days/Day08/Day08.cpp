@@ -17,12 +17,13 @@ namespace std
 template <>
 struct hash<std::pair<char, Math::SVector2I>>
 {
-          std::size_t operator()(const Math::SVector2I& Vector) const noexcept
+          std::size_t operator()(const std::pair<char, Math::SVector2I>& Vector) const noexcept
           {
-                    return std::hash<int16_t>()(Vector.X) ^ (std::hash<int16_t>()(Vector.Y) << 1);
+                    return std::hash<int16_t>()(Vector.second.X) ^ (std::hash<int16_t>()(Vector.second.Y) << 1);
           }
 };
 }
+
 
 namespace KT::Days
 {
@@ -33,23 +34,30 @@ EDay Day08::GetDay() const
 
 using AntennasContainer = std::unordered_set<std::pair<char, Math::SVector2I>>;
 
+std::ostream& operator<<(std::ostream& Os, const AntennasContainer& Antennas)
+{
+          for (const auto& Antenna : Antennas)
+          {
+                    Os << Antenna.first << " " << Antenna.second << '\n';
+          }
+          return Os;
+}
+
 AntennasContainer AllAntennaValues(const std::vector<StringType>& Input)
 {
           AntennasContainer Antennas{};
 
-          std::for_each(Input.begin(), Input.end(), [&Antennas](const StringType& Row)
+          for (auto RowItr = Input.begin(); RowItr != Input.end(); ++RowItr)
           {
-                    std::for_each(Row.begin(), Row.end(), [&Antennas](const char& CharLocation)
+                    for (auto CharItr = RowItr->begin(); CharItr != RowItr->end(); ++CharItr)
                     {
-                              if (CharLocation != '.')
+                              if (*CharItr != '.')
                               {
+                                        Antennas.emplace(*CharItr, Math::SVector2I{(int16_t)std::distance(CharItr, RowItr->end()), (int16_t)std::distance(RowItr, Input.end())});
                               }
-                    });
-                    for (const char& Antenna : Row)
-                    {
-                              Antennas.emplace(Antenna, Math::SVector2I{0, 0});
                     }
-          });
+          }
+          return Antennas;
 }
 
 TGrid<char> BuildGridFromInput(const std::vector<StringType>& Input)
@@ -69,10 +77,10 @@ TGrid<char> BuildGridFromInput(const std::vector<StringType>& Input)
 
 IDayProblemBase::DayReturnType Day08::SolvePart1(const std::vector<StringType>& Input)
 {
-          TGrid<char> Grid = BuildGridFromInput(Input);
+          auto Antennas = AllAntennaValues(Input);
 
 
-          std::cout << Grid << std::endl;
+          std::cout << Antennas << std::endl;
           return INVALID_RESULT;
 }
 

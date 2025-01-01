@@ -92,45 +92,45 @@ private:
                     return Os;
           }
 
-          friend class GridIterator;
+          // friend class GridIterator;
 };
 
-template <typename TGridValue>
-class GridIterator
-{
-public:
-          using iterator_category = std::forward_iterator_tag;
-          using value_type = TGrid<TGridValue>;
-          using difference_type = std::ptrdiff_t;
-          using pointer = TGrid<TGridValue>*;
-          using reference = TGrid<TGridValue>&;
-
-          GridIterator(pointer Ptr, TGrid<TGridValue>* GridPtr) : m_Ptr(Ptr), m_GridPtr(GridPtr)
-          {
-
-          }
-
-          reference operator*() const {return *m_Ptr;}
-          pointer operator->() {return m_Ptr;}
-          GridIterator& operator++()
-          {
-                    m_Ptr++;
-                    for (const TGrid<TGridValue>::RowType& Row : m_GridPtr->m_Grid)
-                    {
-                                if (m_Ptr == Row.end())
-                                {
-                                            m_Ptr = Row.begin();
-                                }
-                    }
-                    if (m_Ptr == m_GridPtr)
-                    return *this;
-          }
-
-private:
-          pointer m_Ptr;
-          TGrid<TGridValue>* m_GridPtr;
-
-};
+// template <typename TGridValue>
+// class GridIterator
+// {
+// public:
+//           using iterator_category = std::forward_iterator_tag;
+//           using value_type = TGrid<TGridValue>;
+//           using difference_type = std::ptrdiff_t;
+//           using pointer = TGrid<TGridValue>*;
+//           using reference = TGrid<TGridValue>&;
+//
+//           GridIterator(pointer Ptr, TGrid<TGridValue>* GridPtr) : m_Ptr(Ptr), m_GridPtr(GridPtr)
+//           {
+//
+//           }
+//
+//           reference operator*() const {return *m_Ptr;}
+//           pointer operator->() {return m_Ptr;}
+//           GridIterator& operator++()
+//           {
+//                     m_Ptr++;
+//                     for (const TGrid<TGridValue>::RowType& Row : m_GridPtr->m_Grid)
+//                     {
+//                                 if (m_Ptr == Row.end())
+//                                 {
+//                                             m_Ptr = Row.begin();
+//                                 }
+//                     }
+//                     if (m_Ptr == m_GridPtr)
+//                     return *this;
+//           }
+//
+// private:
+//           pointer m_Ptr;
+//           TGrid<TGridValue>* m_GridPtr;
+//
+// };
 }
 
 #include "TGrid.tpp"
