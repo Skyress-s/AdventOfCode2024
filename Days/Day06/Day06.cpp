@@ -260,6 +260,7 @@ EDirection GetDirection(const Math::SVector2I& From, const Math::SVector2I& To)
 	{
 		return Down;
 	}
+	return Right;
 }
 
 bool ProcessPath(const SGrid& Grid, const Math::SVector2I& StartLocation, const Math::SVector2I& StartDirection, const Math::SVector2I& NewObstruction)

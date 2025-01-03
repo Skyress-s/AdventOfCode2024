@@ -29,7 +29,12 @@ struct TVector2D
 
 	TVector2D operator+(const TVector2D& Rhs) const
 	{
-		return {X + Rhs.X, Y + Rhs.Y};
+		return TVector2D(X + Rhs.X, Y + Rhs.Y);
+	}
+
+	TVector2D operator-(const TVector2D& Rhs) const
+	{
+		return TVector2D(X - Rhs.X, Y - Rhs.Y);
 	}
 
 	friend std::ostream& operator<<(std::ostream& os, const TVector2D& Vector)
