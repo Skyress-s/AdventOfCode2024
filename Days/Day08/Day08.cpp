@@ -141,8 +141,8 @@ std::unordered_set<Math::SVector2I> ComputeResonantAntinodesFromAntennaPair(cons
 {
           const Math::SVector2I From1To2 = Antenna2 - Antenna1;
 
-          std::vector<int16_t> XFactorization = BasicPrimeFactorization((From1To2.X));
-          std::vector<int16_t> YFactorization = BasicPrimeFactorization((From1To2.Y));
+          std::vector<int16_t> XFactorization = BasicPrimeFactorization(static_cast<int16_t>(abs(From1To2.X)));
+          std::vector<int16_t> YFactorization = BasicPrimeFactorization(static_cast<int16_t>(abs(From1To2.Y)));
 
           std::vector<int16_t> CommonPrimes{};
 
@@ -165,58 +165,42 @@ std::unordered_set<Math::SVector2I> ComputeResonantAntinodesFromAntennaPair(cons
 
           std::cout << "Common Primes: " << CommonPrimes << '\n';
 
-          Math::SVector2I test = From1To2;
+          Math::SVector2I Delta = From1To2;
           for (const int16_t CommonPrime : CommonPrimes)
           {
-                    test = test / CommonPrime;
+                    Delta = Delta / CommonPrime;
           }
 
-          if (test.X == 0)
+          if (Delta.X == 0)
           {
-                    test.Y = std::clamp(test.Y, static_cast<int16_t>(-1), static_cast<int16_t>(1));
+                    Delta.Y = std::clamp(Delta.Y, static_cast<int16_t>(-1), static_cast<int16_t>(1));
           }
-          if (test.Y == 0)
+          if (Delta.Y == 0)
           {
-                    test.X = std::clamp(test.X, static_cast<int16_t>(-1), static_cast<int16_t>(1));
+                    Delta.X = std::clamp(Delta.X, static_cast<int16_t>(-1), static_cast<int16_t>(1));
           }
 
-          std::cout << "final delta: " << test << '\n';
-
-          const float UpPerForward = static_cast<float>(From1To2.Y) / static_cast<float>(From1To2.X);
+          std::cout << "final delta: " << Delta << '\n';
 
           std::unordered_set<Math::SVector2I> Antinodes{};
 
-          auto lambda = [&Antenna1, &Antenna2, &UpPerForward, &Antinodes, &Max](int X)
+          Math::SVector2I CurrentLocation = Antenna1;
+          while (!LocationOOB(Max, CurrentLocation))
           {
-                    const int16_t DeltaX = X - Antenna1.X;
-                    const float Y = (float)Antenna1.Y + UpPerForward * (float)DeltaX;
-
-                    if (!GridMath::IsCloseToInteger(Y))
-                              return;
-
-                    const int16_t FinalYVal = (int16_t)Y;
-
-                    if (FinalYVal < 0 || FinalYVal > Max.Y)
-                              return;
-
-                    const Math::SVector2I Antinode = {(int16_t)X, FinalYVal};
-                    // if (Antinode == Antenna1 || Antinode == Antenna2)
-                    // return;
-
-                    Antinodes.emplace(Antinode);
-          };
-
-          for (int x = Antenna1.X; x <= Max.X && x >= 0; ++x)
-          {
-                    lambda(x);
+                    Antinodes.emplace(CurrentLocation);
+                    CurrentLocation = CurrentLocation + Delta;
           }
 
-          for (int x = Antenna1.X; x <= Max.X && x >= 0; --x)
+          CurrentLocation = Antenna1;
+          while (!LocationOOB(Max, CurrentLocation))
           {
-                    lambda(x);
+                    Antinodes.emplace(CurrentLocation);
+                    CurrentLocation = CurrentLocation - Delta;
           }
+
 
           return Antinodes;
+
 }
 
 std::unordered_set<Math::SVector2I> ComputeAntinodesForAntennaType(const AntennasContainer& Antennas, const char AntennaType)
@@ -325,10 +309,9 @@ IDayProblemBase::DayReturnType Day08::SolvePart2(const std::vector<StringType>& 
 {
           const AntennasContainer Antennas = AllAntennaValues(Input);
 
-
-          std::unordered_set<Math::SVector2I> Antinodess = ComputeResonantAntinodesFromAntennaPair({10, 10}, {5, 5}, {0, 5});
-          std::cout << Antinodess << '\n';
-          return INVALID_RESULT;
+          // std::unordered_set<Math::SVector2I> Antinodess = ComputeResonantAntinodesFromAntennaPair({10, 10}, {5, 5}, {6, 4});
+          // std::cout << Antinodess << '\n';
+          // return INVALID_RESULT;
 
 
           std::vector<char> AntennaTypes = std::accumulate(Antennas.begin(), Antennas.end(), std::vector<char>{},
