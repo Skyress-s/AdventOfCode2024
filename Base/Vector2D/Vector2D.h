@@ -37,6 +37,11 @@ struct TVector2D
 		return TVector2D(X - Rhs.X, Y - Rhs.Y);
 	}
 
+	TVector2D operator/(const T& Rhs) const
+	{
+		return TVector2D(X / Rhs, Y / Rhs);
+	}
+
 	friend std::ostream& operator<<(std::ostream& os, const TVector2D& Vector)
 	{
 		os << "{X: " << Vector.X << " Y: " << Vector.Y << '}';

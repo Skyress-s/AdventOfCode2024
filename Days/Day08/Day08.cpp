@@ -14,6 +14,7 @@
 #include "Base/DayEnum/DayEnum.h"
 #include "Base/Vector2D/Vector2D.h"
 #include "Base/Grid/TGrid.h"
+#include "Utility/PrimeFactorization.h"
 
 namespace std
 {
@@ -52,6 +53,15 @@ std::ostream& operator<<(std::ostream& Os, const std::unordered_set<Math::SVecto
                     Os << Vector << ' ';
           }
           Os << '\n';
+          return Os;
+}
+
+std::ostream& operator<<(std::ostream& Os, const std::vector<int16_t>& Values)
+{
+          for (const int16_t Vector : Values)
+          {
+                    Os << Vector << ' ';
+          }
           return Os;
 }
 
@@ -125,10 +135,52 @@ void FilterAntinodesOOB(const Math::SVector2I& Max, std::unordered_set<Math::SVe
           }
 }
 
+
 std::unordered_set<Math::SVector2I> ComputeResonantAntinodesFromAntennaPair(const Math::SVector2I& Max, const Math::SVector2I& Antenna1,
                                                                             const Math::SVector2I& Antenna2)
 {
           const Math::SVector2I From1To2 = Antenna2 - Antenna1;
+
+          std::vector<int16_t> XFactorization = BasicPrimeFactorization((From1To2.X));
+          std::vector<int16_t> YFactorization = BasicPrimeFactorization((From1To2.Y));
+
+          std::vector<int16_t> CommonPrimes{};
+
+          for (int i = 0; i < XFactorization.size(); ++i)
+          {
+                    const int16_t CurrentPrime = XFactorization[i];
+                    auto FoundYItr = std::ranges::find_if(YFactorization, [CurrentPrime](const int16_t Prime)
+                    {
+                              return CurrentPrime == Prime;
+                    });
+                    if (FoundYItr != YFactorization.end())
+                    {
+                              XFactorization.erase(XFactorization.begin() + i);
+                              i--;
+                              YFactorization.erase(FoundYItr);
+
+                              CommonPrimes.emplace_back(CurrentPrime);
+                    }
+          }
+
+          std::cout << "Common Primes: " << CommonPrimes << '\n';
+
+          Math::SVector2I test = From1To2;
+          for (const int16_t CommonPrime : CommonPrimes)
+          {
+                    test = test / CommonPrime;
+          }
+
+          if (test.X == 0)
+          {
+                    test.Y = std::clamp(test.Y, static_cast<int16_t>(-1), static_cast<int16_t>(1));
+          }
+          if (test.Y == 0)
+          {
+                    test.X = std::clamp(test.X, static_cast<int16_t>(-1), static_cast<int16_t>(1));
+          }
+
+          std::cout << "final delta: " << test << '\n';
 
           const float UpPerForward = static_cast<float>(From1To2.Y) / static_cast<float>(From1To2.X);
 
@@ -149,7 +201,7 @@ std::unordered_set<Math::SVector2I> ComputeResonantAntinodesFromAntennaPair(cons
 
                     const Math::SVector2I Antinode = {(int16_t)X, FinalYVal};
                     // if (Antinode == Antenna1 || Antinode == Antenna2)
-                              // return;
+                    // return;
 
                     Antinodes.emplace(Antinode);
           };
@@ -274,7 +326,7 @@ IDayProblemBase::DayReturnType Day08::SolvePart2(const std::vector<StringType>& 
           const AntennasContainer Antennas = AllAntennaValues(Input);
 
 
-          std::unordered_set<Math::SVector2I> Antinodess = ComputeResonantAntinodesFromAntennaPair({10, 10}, {5, 5}, {4, 6});
+          std::unordered_set<Math::SVector2I> Antinodess = ComputeResonantAntinodesFromAntennaPair({10, 10}, {5, 5}, {0, 5});
           std::cout << Antinodess << '\n';
           return INVALID_RESULT;
 
@@ -300,7 +352,10 @@ IDayProblemBase::DayReturnType Day08::SolvePart2(const std::vector<StringType>& 
           std::cout << '\n';
 
           std::unordered_set<Math::SVector2I> Antinodes{};
-          const Math::SVector2I Max {(int16_t)(static_cast<int16_t>(Input[0].size()) - static_cast<int16_t>(1)), (int16_t)(static_cast<int16_t>(Input.size()) - static_cast<int16_t>(1))};
+          const Math::SVector2I Max{
+                    (int16_t)(static_cast<int16_t>(Input[0].size()) - static_cast<int16_t>(1)),
+                    (int16_t)(static_cast<int16_t>(Input.size()) - static_cast<int16_t>(1))
+          };
           for (const char AntennaType : AntennaTypes)
           {
                     std::unordered_set<Math::SVector2I> NewAntinodes = ComputeResonantAntinodesForAntennaType(Max, Antennas, AntennaType);
