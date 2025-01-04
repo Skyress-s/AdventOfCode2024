@@ -38,10 +38,19 @@ struct TVector2D
 	}
 
 	friend std::ostream& operator<<(std::ostream& os, const TVector2D& Vector)
-    {
-        os << "X: " << Vector.X << " Y: " << Vector.Y;
-        return os;
-    }
+	{
+		os << "{X: " << Vector.X << " Y: " << Vector.Y << '}';
+		return os;
+	}
+
+	friend std::ostream& operator<<(std::ostream& os, const std::vector<TVector2D>& Vectors)
+	{
+		for (const TVector2D& Vector : Vectors)
+		{
+			os << Vector << ' ';
+		}
+		return os;
+	}
 };
 
 using SVector2I = TVector2D<int16_t>;
@@ -58,3 +67,4 @@ struct hash<Math::SVector2I>
     }
 };
 }
+

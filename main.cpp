@@ -16,16 +16,11 @@
 #include "Base/Grid/TGrid.h"
 #include "Days/Day07/Day07.h"
 #include "Days/Day08/Day08.h"
+#include "Utility/GridMath.h"
+#include "Utility/PrimeFactorization.h"
 
 int main()
 {
-	//
-	// std::cout << 2 % 4 << std::endl;
-	// std::cout << 4 % 3 << std::endl;
-	// std::cout << 10 % 1 << std::endl;
-	//
-	// getch();
-	// return 0;
 	const int Choice = KT::UI::ListChoice2<int>({{1, "Solve Part 1"}, {2, "Solve Part 2"}, {3, "Solve Part 1 and 2"}}, "Question Setup");
 	const bool bTest = KT::UI::ListChoice2<bool>({{true, "Yes"}, {false, "No"}}, "Do you want to run tests?");
 

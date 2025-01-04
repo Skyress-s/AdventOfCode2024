@@ -59,6 +59,10 @@ add_executable(AdventOfCode main.cpp
         Base/Grid/TGrid.h
         Base/Grid/GridUtility.tpp
         Base/Grid/GridUtility.h
+        Utility/GridMath.h
+        Utility/GridMath.cpp
+        Utility/PrimeFactorization.cpp
+        Utility/PrimeFactorization.h
 )
 
 # Copies the resources into the binary directory

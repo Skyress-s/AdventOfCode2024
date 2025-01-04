@@ -5,10 +5,12 @@
 #include "Day08.h"
 
 #include <iostream>
+#include <math.h>
 #include <numeric>
 #include <ranges>
 #include <unordered_set>
 
+#include "Utility/GridMath.h"
 #include "Base/DayEnum/DayEnum.h"
 #include "Base/Vector2D/Vector2D.h"
 #include "Base/Grid/TGrid.h"
@@ -47,7 +49,7 @@ std::ostream& operator<<(std::ostream& Os, const std::unordered_set<Math::SVecto
 {
           for (const Math::SVector2I& Vector : VectorSet)
           {
-                    Os << '{' << Vector << '}' << ' ';
+                    Os << Vector << ' ';
           }
           Os << '\n';
           return Os;
@@ -98,25 +100,16 @@ std::vector<Math::SVector2I> ComputeAntinodesFromAntennaPair(const Math::SVector
           return Antinodes;
 }
 
-std::vector<Math::SVector2I> ComputeResonantAntinodesFromAntennaPair(const Math::SVector2I& Antenna1, const Math::SVector2I& Antenna2)
+// bool IsCloseToInteger(const float Value)
+// {
+//           constexpr float c_Tollerance = std::numeric_limits<float>::min() * 1000.f;
+//           return std::abs(roundf(Value) - Value) < c_Tollerance;
+// }
+
+
+bool LocationOOB(const Math::SVector2I& Max, Math::SVector2I& Location)
 {
-          const Math::SVector2I From1To2 = Antenna2 - Antenna1;
-
-
-          const float ForwardPerUp = std::abs(From1To2.X / From1To2.Y);
-
-          for (int i = 1; i < std::abs(From1To2.Y); ++i)
-          {
-                    float X = (float)i * ForwardPerUp;
-                    Math::SVector2I(, From1To2.Y);
-          }
-
-
-
-          std::vector<Math::SVector2I> Antinodes{};
-          Antinodes.emplace_back(Antenna1 - From1To2);
-          Antinodes.emplace_back(Antenna2 + From1To2);
-          return Antinodes;
+          return Location.X < 0 || Location.Y < 0 || Location.X >= Max.X || Location.Y >= Max.Y;
 }
 
 void FilterAntinodesOOB(const Math::SVector2I& Max, std::unordered_set<Math::SVector2I>& InOutAntinodes)
@@ -130,6 +123,48 @@ void FilterAntinodesOOB(const Math::SVector2I& Max, std::unordered_set<Math::SVe
                               i--;
                     }
           }
+}
+
+std::unordered_set<Math::SVector2I> ComputeResonantAntinodesFromAntennaPair(const Math::SVector2I& Max, const Math::SVector2I& Antenna1,
+                                                                            const Math::SVector2I& Antenna2)
+{
+          const Math::SVector2I From1To2 = Antenna2 - Antenna1;
+
+          const float UpPerForward = static_cast<float>(From1To2.Y) / static_cast<float>(From1To2.X);
+
+          std::unordered_set<Math::SVector2I> Antinodes{};
+
+          auto lambda = [&Antenna1, &Antenna2, &UpPerForward, &Antinodes, &Max](int X)
+          {
+                    const int16_t DeltaX = X - Antenna1.X;
+                    const float Y = (float)Antenna1.Y + UpPerForward * (float)DeltaX;
+
+                    if (!GridMath::IsCloseToInteger(Y))
+                              return;
+
+                    const int16_t FinalYVal = (int16_t)Y;
+
+                    if (FinalYVal < 0 || FinalYVal > Max.Y)
+                              return;
+
+                    const Math::SVector2I Antinode = {(int16_t)X, FinalYVal};
+                    // if (Antinode == Antenna1 || Antinode == Antenna2)
+                              // return;
+
+                    Antinodes.emplace(Antinode);
+          };
+
+          for (int x = Antenna1.X; x <= Max.X && x >= 0; ++x)
+          {
+                    lambda(x);
+          }
+
+          for (int x = Antenna1.X; x <= Max.X && x >= 0; --x)
+          {
+                    lambda(x);
+          }
+
+          return Antinodes;
 }
 
 std::unordered_set<Math::SVector2I> ComputeAntinodesForAntennaType(const AntennasContainer& Antennas, const char AntennaType)
@@ -161,25 +196,54 @@ std::unordered_set<Math::SVector2I> ComputeAntinodesForAntennaType(const Antenna
           return Antinodes;
 }
 
+std::unordered_set<Math::SVector2I> ComputeResonantAntinodesForAntennaType(const Math::SVector2I& Max, const AntennasContainer& Antennas,
+                                                                           const char AntennaType)
+{
+          std::unordered_set<Math::SVector2I> Antinodes{};
+
+          auto Antenna0View = std::views::filter(Antennas, [&AntennaType](const auto& Antenna)
+          {
+                    return Antenna.first == AntennaType;
+          });
+
+
+          for (const std::pair<char, Math::TVector2D<short>>& Antenna1 : Antenna0View)
+          {
+                    for (const std::pair<char, Math::TVector2D<short>>& Antenna2 : Antenna0View)
+                    {
+                              const bool bIsUnique = Antenna1 != Antenna2;
+                              if (bIsUnique)
+                              {
+                                        std::unordered_set<Math::SVector2I> NewAntinodes = ComputeResonantAntinodesFromAntennaPair(
+                                                  Max, Antenna1.second, Antenna2.second);
+                                        Antinodes.merge(NewAntinodes);
+                              }
+                    }
+          }
+
+          return Antinodes;
+}
+
 IDayProblemBase::DayReturnType Day08::SolvePart1(const std::vector<StringType>& Input)
 {
           const AntennasContainer Antennas = AllAntennaValues(Input);
 
-          std::vector<char> AntennaTypes = std::accumulate(Antennas.begin(), Antennas.end(), std::vector<char>{}, [](std::vector<char> vector, const std::pair<char, Math::SVector2I>& Value)
-          {
-                    const bool bContains = std::ranges::any_of(vector, [Value](const char& Antenna)
-                    {
-                              return Antenna == Value.first;
-                    });
-                    // const bool bContains = std::ranges::count_if(vector, [Value](const char& Antenna)
-                    // {
-                    //           return Antenna == Value.first;
-                    // }) > 0;
-                    if (!bContains)
-                              vector.push_back(Value.first);
+          std::vector<char> AntennaTypes = std::accumulate(Antennas.begin(), Antennas.end(), std::vector<char>{},
+                                                           [](std::vector<char> vector, const std::pair<char, Math::SVector2I>& Value)
+                                                           {
+                                                                     const bool bContains = std::ranges::any_of(vector, [Value](const char& Antenna)
+                                                                     {
+                                                                               return Antenna == Value.first;
+                                                                     });
+                                                                     // const bool bContains = std::ranges::count_if(vector, [Value](const char& Antenna)
+                                                                     // {
+                                                                     //           return Antenna == Value.first;
+                                                                     // }) > 0;
+                                                                     if (!bContains)
+                                                                               vector.push_back(Value.first);
 
-                    return vector;
-          });
+                                                                     return vector;
+                                                           });
 
           std::cout << "Antenna Types: ";
           for (const char AntennaType : AntennaTypes)
@@ -209,17 +273,24 @@ IDayProblemBase::DayReturnType Day08::SolvePart2(const std::vector<StringType>& 
 {
           const AntennasContainer Antennas = AllAntennaValues(Input);
 
-          std::vector<char> AntennaTypes = std::accumulate(Antennas.begin(), Antennas.end(), std::vector<char>{}, [](std::vector<char> vector, const std::pair<char, Math::SVector2I>& Value)
-          {
-                    const bool bContains = std::ranges::any_of(vector, [Value](const char& Antenna)
-                    {
-                              return Antenna == Value.first;
-                    });
-                    if (!bContains)
-                              vector.push_back(Value.first);
 
-                    return vector;
-          });
+          std::unordered_set<Math::SVector2I> Antinodess = ComputeResonantAntinodesFromAntennaPair({10, 10}, {5, 5}, {4, 6});
+          std::cout << Antinodess << '\n';
+          return INVALID_RESULT;
+
+
+          std::vector<char> AntennaTypes = std::accumulate(Antennas.begin(), Antennas.end(), std::vector<char>{},
+                                                           [](std::vector<char> vector, const std::pair<char, Math::SVector2I>& Value)
+                                                           {
+                                                                     const bool bContains = std::ranges::any_of(vector, [Value](const char& Antenna)
+                                                                     {
+                                                                               return Antenna == Value.first;
+                                                                     });
+                                                                     if (!bContains)
+                                                                               vector.push_back(Value.first);
+
+                                                                     return vector;
+                                                           });
 
           std::cout << "Antenna Types: ";
           for (const char AntennaType : AntennaTypes)
@@ -229,16 +300,15 @@ IDayProblemBase::DayReturnType Day08::SolvePart2(const std::vector<StringType>& 
           std::cout << '\n';
 
           std::unordered_set<Math::SVector2I> Antinodes{};
+          const Math::SVector2I Max {(int16_t)(static_cast<int16_t>(Input[0].size()) - static_cast<int16_t>(1)), (int16_t)(static_cast<int16_t>(Input.size()) - static_cast<int16_t>(1))};
           for (const char AntennaType : AntennaTypes)
           {
-                    std::unordered_set<Math::SVector2I> NewAntinodes = ComputeAntinodesForAntennaType(Antennas, AntennaType);
+                    std::unordered_set<Math::SVector2I> NewAntinodes = ComputeResonantAntinodesForAntennaType(Max, Antennas, AntennaType);
                     Antinodes.merge(NewAntinodes);
           }
 
           std::cout << "Total Before Filtering " << Antinodes.size() << ':' << std::endl;
           std::cout << Antinodes << std::endl;
-          // Loop through them and create the
-          FilterAntinodesOOB({(int16_t)Input.size(), (int16_t)Input[0].size()}, Antinodes);
 
           std::cout << "After Filtering " << Antinodes.size() << ':' << std::endl;
           std::cout << Antinodes << std::endl;
