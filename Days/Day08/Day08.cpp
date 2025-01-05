@@ -243,15 +243,15 @@ std::unordered_set<Math::SVector2I> ComputeResonantAntinodesForAntennaType(const
           });
 
 
-          for (const std::pair<char, Math::TVector2D<short>>& Antenna1 : Antenna0View)
+          for (const auto [Char0, Location0] : Antenna0View)
           {
-                    for (const std::pair<char, Math::TVector2D<short>>& Antenna2 : Antenna0View)
+                    for (const auto [Char1, Location1] : Antenna0View)
                     {
-                              const bool bIsUnique = Antenna1 != Antenna2;
+                              const bool bIsUnique = Location0 != Location1;
                               if (bIsUnique)
                               {
                                         std::unordered_set<Math::SVector2I> NewAntinodes = ComputeResonantAntinodesFromAntennaPair(
-                                                  Max, Antenna1.second, Antenna2.second);
+                                                  Max, Location0, Location1);
                                         Antinodes.merge(NewAntinodes);
                               }
                     }
