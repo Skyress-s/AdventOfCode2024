@@ -7,11 +7,20 @@ set(INCLUDE_DIRECTORIES ./)
 
 include_directories(${INCLUDE_DIRECTORIES})
 
+
 #configure_file(Resources/Day01-Day02-TestInput.txt Resources/Day01-Day02-TestInput.txt COPYONLY) # replace https://cliutils.gitlab.io/modern-cmake/chapters/basics/structure.html
 #configure_file(Resources/Day01-Day02-Input.txt Resources/Day01-Day02-Input.txt COPYONLY)
 #
 #configure_file(Day02/Day02-TestInput.txt Day02/Day02-TestInput.txt COPYONLY) # replace https://cliutils.gitlab.io/modern-cmake/chapters/basics/structure.html
 #configure_file(Day02/Day02-Input.txt Day02/Day02-Input.txt COPYONLY)
+
+# TESTING
+#FetchContent_Declare(Catch2
+#)
+
+#include(CTest)
+#enable_testing()
+#add_test(EqualTest, "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}" "0")
 
 add_executable(AdventOfCode main.cpp
         Base/IDayProblemBase.cpp
@@ -63,6 +72,8 @@ add_executable(AdventOfCode main.cpp
         Utility/GridMath.cpp
         Utility/PrimeFactorization.cpp
         Utility/PrimeFactorization.h
+        Days/Day09/Day09.cpp
+        Days/Day09/Day09.h
 )
 
 # Copies the resources into the binary directory

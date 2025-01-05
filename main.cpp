@@ -16,6 +16,7 @@
 #include "Base/Grid/TGrid.h"
 #include "Days/Day07/Day07.h"
 #include "Days/Day08/Day08.h"
+#include "Days/Day09/Day09.h"
 #include "Utility/GridMath.h"
 #include "Utility/PrimeFactorization.h"
 
@@ -78,6 +79,7 @@ int main()
           Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day06>());
           Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day07>());
           Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day08>());
+          Menu.AddProblem(std::make_unique_for_overwrite<KT::Days::Day09>());
 
           try
           {
