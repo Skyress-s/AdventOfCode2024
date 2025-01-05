@@ -119,7 +119,7 @@ std::vector<Math::SVector2I> ComputeAntinodesFromAntennaPair(const Math::SVector
 
 bool LocationOOB(const Math::SVector2I& Max, Math::SVector2I& Location)
 {
-          return Location.X < 0 || Location.Y < 0 || Location.X >= Max.X || Location.Y >= Max.Y;
+          return Location.X < 0 || Location.Y < 0 || Location.X > Max.X || Location.Y > Max.Y;
 }
 
 void FilterAntinodesOOB(const Math::SVector2I& Max, std::unordered_set<Math::SVector2I>& InOutAntinodes)
@@ -309,7 +309,7 @@ IDayProblemBase::DayReturnType Day08::SolvePart2(const std::vector<StringType>& 
 {
           const AntennasContainer Antennas = AllAntennaValues(Input);
 
-          // std::unordered_set<Math::SVector2I> Antinodess = ComputeResonantAntinodesFromAntennaPair({10, 10}, {5, 5}, {6, 4});
+          // std::unordered_set<Math::SVector2I> Antinodess = ComputeResonantAntinodesFromAntennaPair({10, 10}, {5, 5}, {5, 4});
           // std::cout << Antinodess << '\n';
           // return INVALID_RESULT;
 
@@ -341,6 +341,7 @@ IDayProblemBase::DayReturnType Day08::SolvePart2(const std::vector<StringType>& 
           };
           for (const char AntennaType : AntennaTypes)
           {
+                    // todo I don't like that i just duplicate the functon here. Could easily use a std::function as param or similar here.
                     std::unordered_set<Math::SVector2I> NewAntinodes = ComputeResonantAntinodesForAntennaType(Max, Antennas, AntennaType);
                     Antinodes.merge(NewAntinodes);
           }
