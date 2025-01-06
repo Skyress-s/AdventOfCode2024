@@ -48,35 +48,56 @@ bool FlattenDisk(DiskType& OutDisk)
 {
         // std::cout << "Last Iterator!" << (*Iterator).value() << std::endl;
 
-        std::ranges::for_each(OutDisk.rbegin(), OutDisk.rend(), [&OutDisk](std::optional<long>& Value)
-        {
-                if (Value.has_value())
-                {
-                        auto FirstNull = std::ranges::find_if(OutDisk, [&OutDisk](const std::optional<long>& CompValue)
-                        {
-                                return !CompValue.has_value();
-                        });
-
-                        std::swap(Value, *FirstNull);
-                }
-        });
-
+        // std::ranges::for_each(OutDisk.rbegin(), OutDisk.rend(), [&OutDisk](std::optional<long>& Value)
+        // {
+        //         if (Value.has_value())
+        //         {
+        //                 auto FirstNull = std::ranges::find_if(OutDisk, [&OutDisk](const std::optional<long>& CompValue)
+        //                 {
+        //                         return !CompValue.has_value();
+        //                 });
+        //
+        //                 std::swap(Value, *FirstNull);
+        //         }
+        // });
         // without ranges
+        std::ranges::views::zip
+        for (auto newclmap : std::ranges::iota(OutDisk.begin(), OutDisk.end(), 0))
+        {
 
-        /*
-        std::ranges::for_each(OutDisk.begin(), OutDisk.end(), [&OutDisk](std::optional<long>& value)
+        }
+        for (auto newclmap : std::ranges::views::iota(0, 10))
+        {
+
+        }
+        uint16_t x {};
+        std::ranges::for_each(OutDisk.begin(), OutDisk.end(), [&OutDisk, &x](std::optional<long>& value)
+        // std::ranges::for_each(OutDisk.begin(), OutDisk.end(), [&OutDisk](std::vector<std::optional<long>>::iterator it)
         {
                 if (!value.has_value())
                 {
+
+                        for (auto itr = OutDisk.rbegin(); itr != OutDisk.rend(); ++itr)
+                        {
+                                const std::optional<long>& CompValue = *itr;
+                                if (CompValue.has_value())
+                                {
+
+                                }
+                        }
                         auto [Iterator, End] = std::ranges::find_last_if(OutDisk.begin(), OutDisk.end(), [](const std::optional<long>& Value)
                         {
                                 return Value.has_value();
                         });
-                        std::swap(value, *Iterator);
+
+                        if (Iterator != OutDisk.end())
+                        {
+                                std::swap(value, *Iterator);
+                        }
                 }
                 // std::cout << (value.has_value() ? std::to_string(value.value()) : ".") << ' ';
+                x++;
         });
-        */
 
         std::cout << std::endl;
         for (const auto& Chunk : OutDisk)
