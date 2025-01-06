@@ -12,14 +12,16 @@
 
 namespace KT::Days
 {
+using DiskType = std::vector<std::optional<long>>;
+
 EDay Day09::GetDay() const
 {
         return EDay::Day09;
 }
 
-std::vector<std::optional<long>> BuildDisk(const StringType& Input)
+DiskType BuildDisk(const StringType& Input)
 {
-        std::vector<std::optional<long>> Disk{};
+        DiskType Disk{};
         StringType Output;
         for (int i = 0; i < Input.size(); ++i)
         {
@@ -42,10 +44,55 @@ std::vector<std::optional<long>> BuildDisk(const StringType& Input)
         return Disk;
 }
 
+bool FlattenDisk(DiskType& OutDisk)
+{
+        // std::cout << "Last Iterator!" << (*Iterator).value() << std::endl;
+
+        std::ranges::for_each(OutDisk.rbegin(), OutDisk.rend(), [&OutDisk](std::optional<long>& Value)
+        {
+                if (Value.has_value())
+                {
+                        auto FirstNull = std::ranges::find_if(OutDisk, [&OutDisk](const std::optional<long>& CompValue)
+                        {
+                                return !CompValue.has_value();
+                        });
+
+                        std::swap(Value, *FirstNull);
+                }
+        });
+
+        // without ranges
+
+        /*
+        std::ranges::for_each(OutDisk.begin(), OutDisk.end(), [&OutDisk](std::optional<long>& value)
+        {
+                if (!value.has_value())
+                {
+                        auto [Iterator, End] = std::ranges::find_last_if(OutDisk.begin(), OutDisk.end(), [](const std::optional<long>& Value)
+                        {
+                                return Value.has_value();
+                        });
+                        std::swap(value, *Iterator);
+                }
+                // std::cout << (value.has_value() ? std::to_string(value.value()) : ".") << ' ';
+        });
+        */
+
+        std::cout << std::endl;
+        for (const auto& Chunk : OutDisk)
+        {
+                if (!Chunk.has_value())
+                {
+                }
+        }
+        return false;
+}
+
 IDayProblemBase::DayReturnType Day09::SolvePart1(const std::vector<StringType>& Input)
 {
-        const std::vector<std::optional<long>> DiskChunks = BuildDisk(Input[0]);
-        std::for_each(DiskChunks.begin(), DiskChunks.end(), [this](const std::optional<long>& input)
+        DiskType Disk = BuildDisk(Input[0]);
+        FlattenDisk(Disk);
+        std::for_each(Disk.begin(), Disk.end(), [this](const std::optional<long>& input)
         {
                 if (input.has_value())
                 {
