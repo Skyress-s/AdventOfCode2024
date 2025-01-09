@@ -63,6 +63,7 @@ void TerminalUtility::SetTerminalColor(const ETerminalColor Color) {
 }
 
 void TerminalUtility::ClearTerminalColor() {
-    std::cout << "\033[0m";
+    // std::cout << "\033[0m";
+    std::cout << k_Clear;
 }
 } // KT
