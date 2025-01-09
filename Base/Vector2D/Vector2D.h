@@ -57,7 +57,7 @@ struct TVector2D
 		return os;
 	}
 };
-typedef Test
+
 using SVector2I = TVector2D<int16_t>;
 }
 
