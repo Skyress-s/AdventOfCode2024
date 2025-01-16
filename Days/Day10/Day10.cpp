@@ -32,6 +32,7 @@ EDay Day10::GetDay() const
 
 IDayProblemBase::DayReturnType Day10::SolvePart1(const std::vector<StringType>& Input)
 {
+
         return INVALID_RESULT;
 }
 
