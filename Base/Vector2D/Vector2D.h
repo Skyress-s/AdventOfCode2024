@@ -74,9 +74,17 @@ namespace std
 template <>
 struct hash<Math::SVector2I>
 {
-        std::size_t operator()(const Math::SVector2I& Vector) const noexcept
-        {
-                return std::hash<int16_t>()(Vector.X) ^ (std::hash<int16_t>()(Vector.Y) << 1);
-        }
+         std::size_t operator()(const Math::SVector2I& Vector) const noexcept
+         {
+                 return std::hash<int16_t>()(Vector.X) ^ (std::hash<int16_t>()(Vector.Y) << 1);
+         }
 };
+// template <typename T>
+// struct hash<Math::TVector2D<T>>
+// {
+        // std::size_t operator()(const Math::SVector2I& Vector) const noexcept
+        // {
+                // return std::hash<int16_t>()(Vector.X) ^ (std::hash<int16_t>()(Vector.Y) << 1);
+        // }
+// };
 }
