@@ -89,10 +89,13 @@ add_executable(AdventOfCode main.cpp
         Utility/PrimeFactorization.h
         Days/Day09/Day09.cpp
         Days/Day09/Day09.h
+        Days/Day10/Day10.cpp
+        Days/Day10/Day10.h
 )
 
 add_executable(Catch_Tests_Run SimpleTest.cpp
-#        Base/Vector2D/Vector2D.cpp
+        Days/Day10/Day09Tests.cpp
+        #        Base/Vector2D/Vector2D.cpp
 #        Base/Vector2D/Vector2D.h
 )
 
