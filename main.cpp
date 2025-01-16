@@ -32,6 +32,7 @@ std::ostream& operator<<(std::ostream& Os, const std::vector<int16_t>& Numbers)
 
 int main()
 {
+        // return 0;
           // const Math::SVector2I From1To2 = Math::SVector2I(2, 5) - Math::SVector2I(2, 2);
           /*
           const Math::SVector2I From1To2 = {3, 4};

@@ -21,6 +21,21 @@ include_directories(${INCLUDE_DIRECTORIES})
 #include(CTest)
 #enable_testing()
 #add_test(EqualTest, "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}" "0")
+# Need fetch to get catch2 from internjet
+
+
+
+#------------
+
+
+Include(FetchContent)
+FetchContent_Declare(
+        Catch2
+        GIT_REPOSITORY https://github.com/catchorg/Catch2.git
+        GIT_TAG        v3.4.0 # or a later release
+)
+
+FetchContent_MakeAvailable(Catch2)
 
 add_executable(AdventOfCode main.cpp
         Base/IDayProblemBase.cpp
@@ -76,6 +91,16 @@ add_executable(AdventOfCode main.cpp
         Days/Day09/Day09.h
 )
 
+add_executable(Catch_Tests_Run SimpleTest.cpp
+#        Base/Vector2D/Vector2D.cpp
+#        Base/Vector2D/Vector2D.h
+)
+
+# More catch2 stuff
+
+
+target_link_libraries(Catch_Tests_Run PRIVATE Catch2::Catch2WithMain)
+
 # Copies the resources into the binary directory
 add_custom_target(copy_resources ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory
@@ -85,3 +110,8 @@ add_custom_target(copy_resources ALL
 
 
 add_dependencies(AdventOfCode copy_resources)
+
+# might have to do some
+#catch_discover_tests(Catch_Tests_Run)
+# since we use Fetch_Content we might have to do some aditional step here
+# https://github.com/catchorg/Catch2/blob/devel/docs/cmake-integration.md#top
