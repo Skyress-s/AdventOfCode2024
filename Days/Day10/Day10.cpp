@@ -6,7 +6,7 @@
 
 #include "Base/DayEnum/DayEnum.h"
 
-bool Day10Operations::FindTrailHeads1(const std::vector<StringType>& TopoMap, std::unordered_set<Math::SVector2I>& OutTrailHeads)
+bool Day10::FindTrailHeads1(const std::vector<StringType>& TopoMap, std::unordered_set<Math::SVector2I>& OutTrailHeads)
 {
         for (int i = 0; i < TopoMap.size(); ++i)
         {

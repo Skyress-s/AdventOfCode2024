@@ -10,9 +10,14 @@
 
 enum class EDay: uint8_t;
 
-namespace Day10Operations
+
+
+namespace Day10
 {
+        using std::unord
         bool FindTrailHeads1(const std::vector<StringType>& TopoMap, std::unordered_set<Math::SVector2I>& OutTrailHeads);
+
+        IDayProblemBase::DayReturnType FindNumUniqueHikingTrails(const std::vector<StringType>& TopoMap)
 }
 namespace KT::Days {
 
