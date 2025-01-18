@@ -6,7 +6,7 @@
 
 #include "Base/DayEnum/DayEnum.h"
 
-bool Day10Operations::FindTrailHeads1(const std::vector<StringType>& TopoMap, std::unordered_set<Math::SVector2I>& OutTrailHeads)
+bool Day10::FindTrailHeads1(const std::vector<StringType>& TopoMap, std::unordered_set<Math::SVector2I>& OutTrailHeads)
 {
         for (int i = 0; i < TopoMap.size(); ++i)
         {
@@ -32,6 +32,11 @@ EDay Day10::GetDay() const
 
 IDayProblemBase::DayReturnType Day10::SolvePart1(const std::vector<StringType>& Input)
 {
+        std::unordered_set<Math::SVector2I> TrailHeads{};
+        ::Day10::FindTrailHeads1(Input, TrailHeads);
+
+
+
 
         return INVALID_RESULT;
 }
