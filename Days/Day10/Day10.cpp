@@ -7,11 +7,11 @@
 #include <cassert>
 #include <iostream>
 #include <set>
+#include <algorithm>
 
 #include "Base/Bounds/Bound.h"
 #include "Base/DayEnum/DayEnum.h"
 #include "Base/Direction/Type.h"
-#include "catch2/matchers/catch_matchers_contains.hpp"
 
 bool Day10::FindTrailHeads1(const std::vector<StringType>& TopoMap, std::unordered_set<Math::SVector2I>& OutTrailHeads)
 {

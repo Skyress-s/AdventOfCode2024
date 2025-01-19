@@ -9,6 +9,8 @@
 #include "catch2/catch_test_macros.hpp"
 #include "Days/Day01/Day01.h"
 #include "Utility/IOUtility.h"
+#include <ranges>
+#include <algorithm>
 
 
 std::vector<StringType> GenerateSimpleTopoMap()
@@ -21,6 +23,23 @@ TEST_CASE("Jaho")
         SECTION("IsTrueTrue?")
         {
                 REQUIRE(true == true);
+        }
+
+        std::vector<std::vector<int>> t1{
+                {1, 2, 3, 4, 5, 6, 7},
+                {1, 2, 3, 4, 5, 6, 7, 9},
+                {1, 2, 3, 4, 7, 8, 9},
+                {1, 2, 3, 4, 5, 6, 7, 8, 9},
+                {1, 2, 3, 4, 6, 7, 8, 9},
+        };
+        std::vector<int> t2{1, 2, 3, 4, 5, 6, 7, 8, 9};
+        const bool AnyOf = std::ranges::any_of(t1, [t2](const std::vector<int>& Trail)
+        {
+                return t2 == Trail;
+        });
+        SECTION("AnyOf?")
+        {
+                REQUIRE(AnyOf);
         }
 }
 

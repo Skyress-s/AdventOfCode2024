@@ -94,6 +94,7 @@ add_executable(AdventOfCode main.cpp
         Base/Direction/Type.h
         Base/Bounds/Bound.cpp
         Base/Bounds/Bound.h
+        Base/Direction/Type.cpp
 )
 
 add_executable(Catch_Tests_Run SimpleTest.cpp
@@ -106,6 +107,7 @@ add_executable(Catch_Tests_Run SimpleTest.cpp
         Base/DayEnum/DayEnum.cpp
         Base/Bounds/Bound.h
         Base/Bounds/Bound.cpp
+        Base/Direction/Type.cpp
         #        Base/Vector2D/Vector2D.cpp
 #        Base/Vector2D/Vector2D.h
 )
