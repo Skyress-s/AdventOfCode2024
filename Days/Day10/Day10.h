@@ -14,7 +14,9 @@ namespace Day10
 {
         bool FindTrailHeads1(const std::vector<StringType>& TopoMap, std::unordered_set<Math::SVector2I>& OutTrailHeads);
 
-        IDayProblemBase::DayReturnType FindNumUniqueHikingTrails(const std::vector<StringType>& TopoMap)
+        IDayProblemBase::DayReturnType FindNumUniqueHikingTrails(const std::vector<StringType>& TopoMap, const std::unordered_set<Math::SVector2I>& TrailHeads);
+
+        bool IsLocationValid(const std::vector<StringType>& TopoMap, const Math::SVector2I& Location, const Math::SVector2I& TestLocation);
 }
 namespace KT::Days {
 

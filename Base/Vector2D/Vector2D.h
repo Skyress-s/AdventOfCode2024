@@ -67,6 +67,7 @@ struct TVector2D
 };
 
 using SVector2I = TVector2D<int16_t>;
+
 }
 
 namespace std
@@ -79,6 +80,9 @@ struct hash<Math::SVector2I>
                  return std::hash<int16_t>()(Vector.X) ^ (std::hash<int16_t>()(Vector.Y) << 1);
          }
 };
+
+
+
 // template <typename T>
 // struct hash<Math::TVector2D<T>>
 // {

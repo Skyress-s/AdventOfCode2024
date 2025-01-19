@@ -14,16 +14,13 @@
 #include <set>
 
 #include "Base/DayEnum/DayEnum.h"
+#include "Base/Direction/Type.h"
 #include "Base/Vector2D/Vector2D.h"
 // Y
 // ^
 // | --> X
 
 
-enum EDirection
-{
-	Up, Down, Left, Right
-};
 
 struct SGrid
 {
@@ -242,31 +239,11 @@ std::ostream& operator<<(std::ostream& os, const std::set<Math::SVector2I>& Set)
 	return os << "}\n";
 }
 
-EDirection GetDirection(const Math::SVector2I& From, const Math::SVector2I& To)
-{
-	if (From.X < To.X)
-	{
-		return Right;
-	}
-	if (From.X > To.X)
-	{
-		return Left;
-	}
-	if (From.Y < To.Y)
-	{
-		return Up;
-	}
-	if (From.Y > To.Y)
-	{
-		return Down;
-	}
-	return Right;
-}
 
 bool ProcessPath(const SGrid& Grid, const Math::SVector2I& StartLocation, const Math::SVector2I& StartDirection, const Math::SVector2I& NewObstruction)
 {
 	// std::cout << "New Path! \n";
-	std::vector<std::pair<Math::SVector2I, EDirection>> VisitedLocations;
+	std::vector<std::pair<Math::SVector2I, Direction::Type>> VisitedLocations;
 	VisitedLocations.reserve(5000);
 	Math::SVector2I CurrentLocation = StartLocation;
 	Math::SVector2I CurrentDirection = StartDirection;
@@ -274,7 +251,7 @@ bool ProcessPath(const SGrid& Grid, const Math::SVector2I& StartLocation, const 
 	uint8_t NumMatches{0};
 	bool bHasLooped{false};
 
-	VisitedLocations.emplace_back(StartLocation, GetDirection(StartLocation, StartLocation + StartDirection));
+	VisitedLocations.emplace_back(StartLocation, Direction::GetDirection(StartLocation, StartLocation + StartDirection));
 
 	while (true)
 	{
@@ -292,7 +269,7 @@ bool ProcessPath(const SGrid& Grid, const Math::SVector2I& StartLocation, const 
 		}
 		else // New Valid Position
 		{
-			std::pair NewLocationPair {NewPosition, GetDirection(NewPosition,  NewPosition + NewDirection)};
+			std::pair NewLocationPair {NewPosition, Direction::GetDirection(NewPosition,  NewPosition + NewDirection)};
 
 			auto LoopFilter = VisitedLocations | std::views::filter([NewLocationPair](const auto& VisitedLocation)
 			{

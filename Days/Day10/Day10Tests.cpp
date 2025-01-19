@@ -16,19 +16,37 @@ std::vector<StringType> GenerateSimpleTopoMap()
         return KT::IOUtility::ReadFile(KT::IOUtility::GetTestInputFilePathFromDay(EDay::Day10));
 }
 
+TEST_CASE("Jaho")
+{
+        SECTION("IsTrueTrue?")
+        {
+                REQUIRE(true == true);
+        }
+}
+
 TEST_CASE("Day10 Tests")
 {
-        auto TopoMap {};
+        // Finding map
+        std::vector<StringType> TopoMap{};
+        TopoMap = GenerateSimpleTopoMap();
         SECTION("Load From Disk")
         {
-                TopoMap = GenerateSimpleTopoMap();
                 REQUIRE(TopoMap.size() > 0);
         }
+
+        SECTION("IsLocationValid")
+        {
+                const bool Invalid = Day10::IsLocationValid(TopoMap, {0, 0}, {0, 1});
+                REQUIRE(Invalid == false);
+                const bool Valid = Day10::IsLocationValid(TopoMap, {2, 0}, {3, 0});
+                REQUIRE(Valid == true);
+        }
+
+        // Trail Heads
+        std::unordered_set<Math::SVector2I> TrailHeads{};
+        Day10::FindTrailHeads1(TopoMap, TrailHeads);
         SECTION("Find Simple trailhead")
         {
-
-                std::unordered_set<Math::SVector2I> TrailHeads{};
-                Day10::FindTrailHeads1(TopoMap, TrailHeads);
                 REQUIRE(TrailHeads.size() == 9);
                 for (const Math::SVector2I& TrailHead : TrailHeads)
                 {
@@ -36,5 +54,9 @@ TEST_CASE("Day10 Tests")
                 }
         }
 
-
+        IDayProblemBase::DayReturnType UniqueHikingTrails = Day10::FindNumUniqueHikingTrails(TopoMap, TrailHeads);
+        SECTION("Unique Hiking Trails")
+        {
+                REQUIRE(UniqueHikingTrails == 36);
+        }
 }
